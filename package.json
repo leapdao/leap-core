@@ -1,0 +1,64 @@
+{
+  "name": "parsec-lib",
+  "version": "0.1.0",
+  "description": "transaction and block implementation",
+  "main": "dist/index.js",
+  "keywords": [
+    "parsec",
+    "plasma",
+    "ethereum"
+  ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "lint": "npm run lint:js",
+    "lint:eslint": "eslint --fix --ignore-path .gitignore --ignore-pattern internals/scripts",
+    "lint:js": "npm run lint:eslint -- . ",
+    "check-coverage": "nyc check-coverage --statements 50 --branches 50 --functions 50 --lines 50",
+    "test": "mocha lib/*.spec.js --compilers js:babel-register",
+    "cover": "nyc --reporter=lcov npm t",
+    "prebuild": "rm -rf dist",
+    "build": "babel --out-dir dist --ignore *.spec.js lib"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run cover && npm run check-coverage"
+    }
+  },
+  "nyc": {
+    "exclude": [
+      "**/*.spec.js",
+      "test",
+      "dist"
+    ]
+  },
+  "author": "Parsec Labs",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.10.4",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-array-includes": "^2.0.3",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.18.0",
+    "babel-runtime": "^6.9.2",
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0",
+    "mocha": "^3.0.0-1",
+    "nyc": "^11.2.1",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0",
+    "utf8": "^2.1.2"
+  },
+  "dependencies": {
+    "bignumber.js": "^4.0.2",
+    "es6-promise": "^4.1.0",
+    "ethereumjs-util": "^4.5.0"
+  }
+}
