@@ -1,5 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Type = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
-var _signer = require('./signer');var _signer2 = _interopRequireDefault(_signer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Type = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _signer = require('./signer');var _signer2 = _interopRequireDefault(_signer);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 var EMPTY = '0x0000000000000000000000000000000000000000000000000000000000000000';
 var MAX_UINT32 = 0xFFFFFFFF;
@@ -21,13 +20,13 @@ Transaction = function () {
     this.height = height;
   }(0, _createClass3.default)(Transaction, [{ key: 'coinbase', value: function coinbase()
 
-    {for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}var
-      value = args[0],addr = args[1];
+    {for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];} // eslint-disable-line class-methods-use-this
+      var value = args[0],addr = args[1];
       var payload = Buffer.alloc(29, 0);
       // <1 bytes type>
       payload.writeUInt8(Type.COINBASE, 0);
       // value
-      var big = ~~(value / MAX_UINT32);
+      var big = ~~(value / MAX_UINT32); // eslint-disable-line no-bitwise
       payload.writeUInt32BE(big, 1);
       var low = value % MAX_UINT32 - big;
       payload.writeUInt32BE(low, 5);
@@ -36,15 +35,15 @@ Transaction = function () {
       return new _signer2.default(args, payload, Type.COINBASE);
     } }, { key: 'deposit', value: function deposit()
 
-    {for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {args[_key2] = arguments[_key2];}var
-      depositId = args[0],value = args[1],addr = args[2];
+    {for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {args[_key2] = arguments[_key2];} // eslint-disable-line class-methods-use-this
+      var depositId = args[0],value = args[1],addr = args[2];
       var payload = Buffer.alloc(33, 0);
       // <1 bytes type>
       payload.writeUInt8(Type.DEPOSIT, 0);
       // depositId
       payload.writeUInt32BE(depositId, 1);
       // value
-      var big = ~~(value / MAX_UINT32);
+      var big = ~~(value / MAX_UINT32); // eslint-disable-line no-bitwise
       payload.writeUInt32BE(big, 5);
       var low = value % MAX_UINT32 - big;
       payload.writeUInt32BE(low, 9);
@@ -65,7 +64,7 @@ Transaction = function () {
       // <1 bytes type>
       payload.writeUInt8(Type.TRANSFER, 0);
       // height
-      var big = ~~(this.height / MAX_UINT32);
+      var big = ~~(this.height / MAX_UINT32); // eslint-disable-line no-bitwise
       payload.writeUInt32BE(big, 1);
       var low = this.height % MAX_UINT32 - big;
       payload.writeUInt32BE(low, 5);
@@ -78,7 +77,7 @@ Transaction = function () {
       }
       // build outputs
       for (var _i = 0; _i < outs.length; _i += 1) {
-        big = ~~(outs[_i].value / MAX_UINT32);
+        big = ~~(outs[_i].value / MAX_UINT32); // eslint-disable-line no-bitwise
         payload.writeUInt32BE(big, 10 + ins.length * IN_LENGTH + _i * OUT_LENGTH, 'hex');
         low = outs[_i].value % MAX_UINT32 - big;
         payload.writeUInt32BE(low, 14 + ins.length * IN_LENGTH + _i * OUT_LENGTH, 'hex');
@@ -108,7 +107,7 @@ Transaction = function () {
       var rv = { type: type };
       switch (type) {
         case Type.COINBASE:{
-            if (dataBuf.length != 29) {
+            if (dataBuf.length !== 29) {
               throw new Error('malformed coinbase tx.');
             }
             rv.outs = [{
@@ -118,7 +117,7 @@ Transaction = function () {
             break;
           }
         case Type.DEPOSIT:{
-            if (dataBuf.length != 33) {
+            if (dataBuf.length !== 33) {
               throw new Error('malformed deposit tx.');
             }
             rv.ins = [{
@@ -133,8 +132,8 @@ Transaction = function () {
         case Type.TRANSFER:{
             rv.height = parseInt(dataBuf.slice(1, 9).toString('hex'), 16);
             var insOuts = dataBuf.readUInt8(9);
-            var insLength = insOuts >> 4;
-            var outsLength = insOuts & 0xF;
+            var insLength = insOuts >> 4; // eslint-disable-line no-bitwise
+            var outsLength = insOuts & 0xF; // eslint-disable-line no-bitwise
             rv.ins = [];
             for (var i = 0; i < insLength; i += 1) {
               var input = {

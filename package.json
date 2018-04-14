@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "lint": "npm run lint:js",
-    "lint:eslint": "eslint --fix --ignore-path .gitignore --ignore-pattern internals/scripts",
+    "lint:eslint": "eslint --fix --ignore-path .gitignore --ignore-pattern internals/scripts --ignore-pattern dist",
     "lint:js": "npm run lint:eslint -- . ",
     "check-coverage": "nyc check-coverage --statements 50 --branches 50 --functions 50 --lines 50",
     "test": "mocha lib/*.spec.js --compilers js:babel-register",

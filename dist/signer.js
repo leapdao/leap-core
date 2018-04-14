@@ -1,8 +1,7 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 var EMPTY = Buffer.alloc(32, 0);
-var IN_LENGTH = 33 + 65;
-var OUT_LENGTH = 28;var
+var IN_LENGTH = 33 + 65;var
 
 Signer = function () {
   function Signer(values, txData, type) {(0, _classCallCheck3.default)(this, Signer);
@@ -12,10 +11,10 @@ Signer = function () {
   }(0, _createClass3.default)(Signer, [{ key: 'sign', value: function sign(
 
     privKeys) {
-      if (privKeys.length != this.values[0].length) {
+      if (privKeys.length !== this.values[0].length) {
         throw Error('amount of private keys doesn\'t mathch amount of inputs');
       }
-      for (var i = 0; i < privKeys.length; i++) {
+      for (var i = 0; i < privKeys.length; i += 1) {
         var privBuf = new Buffer(privKeys[i].replace('0x', ''), 'hex');
         var hash = _ethereumjsUtil2.default.sha3(this.sigHashBuf());
         var sig = _ethereumjsUtil2.default.ecsign(hash, privBuf);
@@ -38,7 +37,7 @@ Signer = function () {
       var noSigs = Buffer.alloc(this.txData.length, 0);
       this.txData.copy(noSigs, 0, 0, 10);
       var start = void 0;
-      for (var i = 0; i < this.values[0].length; i++) {
+      for (var i = 0; i < this.values[0].length; i += 1) {
         start = 10 + i * IN_LENGTH;
         this.txData.copy(noSigs, start, start, 33);
       }
