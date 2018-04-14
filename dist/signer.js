@@ -52,4 +52,8 @@ Signer = function () {
 
     {
       return '0x' + this.txData.toString('hex');
+    } }, { key: 'buf', value: function buf()
+
+    {
+      return this.txData;
     } }]);return Signer;}();exports.default = Signer;module.exports = exports['default'];
