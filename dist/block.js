@@ -3,11 +3,48 @@
 var MAX_UINT32 = 0xFFFFFFFF;var
 
 Block = function () {
-  function Block(parent, height, merkleRoot) {(0, _classCallCheck3.default)(this, Block);
+  function Block(parent, height) {(0, _classCallCheck3.default)(this, Block);
     this.parent = parent;
     this.height = height;
-    this.merkleRoot = merkleRoot;
-  }(0, _createClass3.default)(Block, [{ key: 'unsigedHeader', value: function unsigedHeader(
+    this.txList = [];
+  }(0, _createClass3.default)(Block, [{ key: 'addTx', value: function addTx(
+
+    tx) {
+      if (this.txList.indexOf(tx.hash()) > -1) {
+        throw Error('tx already contained');
+      }
+      this.txList.push(tx);
+      return this;
+    } }, { key: 'hashTree', value: function hashTree(
+
+    list) {
+      if (list.length % 2 !== 0) {
+        throw Error('uneven number of tx');
+      }
+      var payload = void 0;
+      var rv = [];
+      for (var i = 0; i < list.length; i += 2) {
+        payload = Buffer.alloc(64);
+        list[i].copy(payload, 0);
+        list[i + 1].copy(payload, 32);
+        rv.push(_ethereumjsUtil2.default.sha3(payload));
+      }
+      if (rv.length === 1) {
+        return '0x' + rv[0].toString('hex');
+      }
+      return this.hashTree(rv);
+    } }, { key: 'merkleRoot', value: function merkleRoot()
+
+    {
+      var hashBufs = [];
+      for (var i = 0; i < this.txList.length; i += 1) {
+        hashBufs.push(this.txList[i].hashBuf());
+      }
+      if (hashBufs.length % 2 !== 0) {
+        hashBufs.push(Buffer.alloc(32, 0));
+      }
+      return this.hashTree(hashBufs);
+    } }, { key: 'unsigedHeader', value: function unsigedHeader(
 
     payload) {
       payload.write(this.parent.replace('0x', ''), 0, 'hex');
@@ -15,7 +52,7 @@ Block = function () {
       payload.writeUInt32BE(big, 32);
       var low = this.height % MAX_UINT32 - big;
       payload.writeUInt32BE(low, 36);
-      payload.write(this.merkleRoot.replace('0x', ''), 40, 'hex');
+      payload.write(this.merkleRoot().replace('0x', ''), 40, 'hex');
       return payload;
     } }, { key: 'sigHash', value: function sigHash()
 

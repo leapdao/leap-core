@@ -23,14 +23,17 @@ Signer = function () {
         this.txData.writeInt8(sig.v, 107 + i * IN_LENGTH);
       }
       return this;
-    } }, { key: 'hash', value: function hash()
+    } }, { key: 'hashBuf', value: function hashBuf()
 
     {
       if (this.txData.slice(34, 66).equals(EMPTY)) {
         throw Error('not signed yet');
       }
-      var hash = _ethereumjsUtil2.default.sha3(this.txData);
-      return '0x' + hash.toString('hex');
+      return _ethereumjsUtil2.default.sha3(this.txData);
+    } }, { key: 'hash', value: function hash()
+
+    {
+      return '0x' + this.hashBuf().toString('hex');
     } }, { key: 'sigHashBuf', value: function sigHashBuf()
 
     {
