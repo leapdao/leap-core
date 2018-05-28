@@ -1,10 +1,12 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Util = function () {function Util() {(0, _classCallCheck3.default)(this, Util);}(0, _createClass3.default)(Util, null, [{ key: 'isUint',
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
+
+Util = function () {function Util() {(0, _classCallCheck3.default)(this, Util);}(0, _createClass3.default)(Util, null, [{ key: 'isUint',
 
     /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * Test whether an object is a uint.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * @param {Number?} value
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * @returns {Boolean}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */value: function isUint(
+                                                                                                                                          * Test whether an object is a uint.
+                                                                                                                                          * @param {Number?} value
+                                                                                                                                          * @returns {Boolean}
+                                                                                                                                          */value: function isUint(
     value) {
       return Util.isInt(value) && value >= 0;
     }
@@ -15,7 +17,7 @@
        * @returns {Boolean}
        */ }, { key: 'isU8', value: function isU8(
     value) {
-      return (value & 0xff) === value;
+      return (value & 0xff) === value; // eslint-disable-line no-bitwise
     }
 
     /**
@@ -25,7 +27,7 @@
        */ }, { key: 'isU16', value: function isU16(
 
     value) {
-      return (value & 0xffff) === value;
+      return (value & 0xffff) === value; // eslint-disable-line no-bitwise
     }
 
     /**
@@ -35,7 +37,7 @@
        */ }, { key: 'isU32', value: function isU32(
 
     value) {
-      return value >>> 0 === value;
+      return value >>> 0 === value; // eslint-disable-line no-bitwise
     }
 
     /**
@@ -63,13 +65,13 @@
            */ }, { key: 'indexOf', value: function indexOf(
 
     items, data) {
-      assert(Array.isArray(items));
-      assert(Buffer.isBuffer(data));
+      (0, _assert2.default)(Array.isArray(items));
+      (0, _assert2.default)(Buffer.isBuffer(data));
 
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
 
-        assert(Buffer.isBuffer(item));
+        (0, _assert2.default)(Buffer.isBuffer(item));
 
         if (item.equals(data)) {return i;}
       }
@@ -85,7 +87,7 @@
        */ }, { key: 'startsWith', value: function startsWith(
 
     str, prefix) {
-      assert(typeof str === 'string');
+      (0, _assert2.default)(typeof str === 'string');
 
       if (!str.startsWith) {return str.indexOf(prefix) === 0;}
 
@@ -116,4 +118,24 @@
       if (typeof hash !== 'string') {return false;}
       var trunk = hash.indexOf('0x') === 0 ? hash.substring(2, hash.length) : hash;
       return trunk.length === 64 && Util.isBytes(trunk);
+    } }, { key: 'writeUint64', value: function writeUint64(
+
+    buff, value) {var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var big = ~~(value / 0xFFFFFFFF); // eslint-disable-line no-bitwise
+      buff.writeUInt32BE(big, offset);
+      var low = value % 0xFFFFFFFF - big;
+      buff.writeUInt32BE(low, offset + 4);
+    } }, { key: 'readUint64', value: function readUint64(
+
+    buff) {var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      return parseInt(buff.slice(offset, offset + 8).toString('hex'), 16);
+    } }, { key: 'arrayToRaw', value: function arrayToRaw(
+
+    arr) {
+      // todo: possible performance improvement if totalLength supplied to Buffer.concat
+      return Buffer.concat(arr.map(function (v) {return v.toRaw();}));
+    } }, { key: 'toHexString', value: function toHexString(
+
+    buffer) {
+      return '0x' + buffer.toString('hex');
     } }]);return Util;}();exports.default = Util;module.exports = exports['default'];

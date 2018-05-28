@@ -1,7 +1,28 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUTPOINT_LENGTH = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _encoding = require('./encoding');var _encoding2 = _interopRequireDefault(_encoding);
-var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
+var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
+
+// 32 bytes prev tx + 1 byte output pos
+var OUTPOINT_LENGTH = exports.OUTPOINT_LENGTH = 33;
+
+/*
+                                                     * Helpers
+                                                     */
+function strcmp(a, b) {
+  var len = Math.min(a.length, b.length);
+
+  for (var i = 0; i < len; i++) {
+    if (a[i] < b[i]) {return -1;}
+    if (a[i] > b[i]) {return 1;}
+  }
+
+  if (a.length < b.length) {return -1;}
+
+  if (a.length > b.length) {return 1;}
+
+  return 0;
+}var
 
 Outpoint = function () {
   function Outpoint(hash, index) {(0, _classCallCheck3.default)(this, Outpoint);
@@ -26,20 +47,35 @@ Outpoint = function () {
      * Test an object to see if it is an outpoint.
      * @param {Object} obj
      * @returns {Boolean}
-     */(0, _createClass3.default)(Outpoint, [{ key: 'isOutpoint', value: function isOutpoint(
-    obj) {
-      return obj instanceof Outpoint;
+     */(0, _createClass3.default)(Outpoint, [{ key: 'equals',
+
+
+
+
+    /**
+                                                               * Test equality against another outpoint.
+                                                               * @param {Outpoint} prevout
+                                                               * @returns {Boolean}
+                                                               */value: function equals(
+    prevout) {
+      (0, _assert2.default)(Outpoint.isOutpoint(prevout));
+      return this.hash === prevout.hash &&
+      this.index === prevout.index;
     }
 
     /**
-       * Test equality against another outpoint.
+       * Compare against another outpoint (BIP69).
        * @param {Outpoint} prevout
-       * @returns {Boolean}
-       */ }, { key: 'equals', value: function equals(
+       * @returns {Number}
+       */ }, { key: 'compare', value: function compare(
     prevout) {
-      (0, _assert2.default)(this.isOutpoint(prevout));
-      return this.hash === prevout.hash &&
-      this.index === prevout.index;
+      (0, _assert2.default)(Outpoint.isOutpoint(prevout));
+
+      var cmp = strcmp(this.txid(), prevout.txid());
+
+      if (cmp !== 0) {return cmp;}
+
+      return this.index - prevout.index;
     }
 
     /**
@@ -51,29 +87,34 @@ Outpoint = function () {
       return '0x' + this.hash.toString('hex');
     }
 
-    /**
-       * Calculate size of outpoint.
-       * @returns {Number}
-       */ }, { key: 'getSize', value: function getSize()
-
+    /* eslint-disable class-methods-use-this */ }, { key: 'getSize', value: function getSize()
     {
-      return 33;
+      return OUTPOINT_LENGTH;
     }
+    /* eslint-enable class-methods-use-this */
 
     /**
-       * Instantiate outpoint from serialized data.
-       * @param {Buffer} data
-       * @returns {Outpoint}
-       */ }], [{ key: 'fromRaw', value: function fromRaw(
-    buf) {
-      return new Outpoint(buf.slice(0, 32), buf.readUInt8(32));
+                                                * Instantiate outpoint from serialized data.
+                                                * @param {Buffer} data
+                                                * @returns {Outpoint}
+                                                */ }, { key: 'toRaw', value: function toRaw(
+
+
+
+
+    buf, offset) {
+      var dataBuf = buf || Buffer.alloc(this.getSize());
+      var off = offset || 0;
+      this.hash.copy(dataBuf, 0 + off);
+      dataBuf.writeUInt8(this.index, 32 + off);
+      return dataBuf;
     }
 
     /**
        * Instantiate outpoint from json object.
        * @param {Object} json
        * @returns {Outpoint}
-       */ }, { key: 'fromJSON', value: function fromJSON(
+       */ }], [{ key: 'isOutpoint', value: function isOutpoint(obj) {return obj instanceof Outpoint;} }, { key: 'fromRaw', value: function fromRaw(buf) {return new Outpoint(buf.slice(0, 32), buf.readUInt8(32));} }, { key: 'fromJSON', value: function fromJSON(
     json) {
       (0, _assert2.default)(json, 'Outpoint data is required.');
       return new Outpoint(json.hash, json.index);
@@ -90,4 +131,4 @@ Outpoint = function () {
       (0, _assert2.default)(typeof index === 'number');
       (0, _assert2.default)(index >= 0);
       return new Outpoint(tx.hash('hex'), index);
-    } }]);return Outpoint;}();exports.default = Outpoint;module.exports = exports['default'];
+    } }]);return Outpoint;}();exports.default = Outpoint;
