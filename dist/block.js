@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _log = require('babel-runtime/core-js/math/log2');var _log2 = _interopRequireDefault(_log);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);
 var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
 
@@ -24,7 +24,7 @@ Block = function () {
 
     {
       if (!this.merkleTree) {
-        var hashBufs = this.txList.map(function (tx) {return tx.toRaw();});
+        var hashBufs = this.txList.map(function (tx) {return tx.hashBuf();});
         this.merkleTree = new _merkleTree2.default(hashBufs);
       }
       return this.merkleTree;
@@ -85,11 +85,24 @@ Block = function () {
     // 32b - proof,
     // ... <more 32b proofs if needed>
     // ]
-  }, { key: 'proof', value: function proof(tx) {
+  }, { key: 'proof', value: function proof(tx) {var proofOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       var txData = tx.toRaw();
       var pos = this.txHashList.indexOf(tx.hash());
       if (pos < 0) {
         throw Error('tx not in the block');
+      }
+      if (proofOffset > 0) {
+        // 1. find size of block (rounded pow 2)
+        var nextPow = this.txList.length - 1;
+        nextPow |= nextPow >> 1;
+        nextPow |= nextPow >> 2;
+        nextPow |= nextPow >> 4;
+        nextPow |= nextPow >> 8;
+        nextPow |= nextPow >> 16;
+        nextPow++;
+        // 2. shift proofOffset
+        // 3. add numbers
+        pos += proofOffset << (0, _log2.default)(nextPow);
       }
       var slices = [];
       slices.push(this.hash());

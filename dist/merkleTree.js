@@ -9,7 +9,7 @@ MerkleTree = function () {
 
   function MerkleTree(elements) {(0, _classCallCheck3.default)(this, MerkleTree);
     // Filter empty strings and hash elements
-    this.elements = elements.filter(function (el) {return el;}).map(function (el) {return (0, _ethereumjsUtil.sha3)(el);});
+    this.elements = elements.filter(function (el) {return el;});
 
     if (this.elements.length % 2 !== 0) {
       this.elements.push(Buffer.alloc(32, 0));

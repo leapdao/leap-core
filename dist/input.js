@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.SPEND_INPUT_LENGTH = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.SPEND_INPUT_LENGTH = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
 var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
@@ -78,10 +78,11 @@ Input = function () {
 
       }
       if (this.isSpend()) {
-        var input = this.prevout;
+        var input = (0, _extends3.default)({}, this.prevout); // toJSON shouldn't mutate existing objects
+        input.hash = _ethereumjsUtil2.default.bufferToHex(input.hash);
         if (this.signer) {
-          input.r = '0x' + this.r.toString('hex');
-          input.s = '0x' + this.s.toString('hex');
+          input.r = _ethereumjsUtil2.default.bufferToHex(this.r);
+          input.s = _ethereumjsUtil2.default.bufferToHex(this.s);
           input.v = this.v;
           input.signer = this.signer;
         }
@@ -95,6 +96,11 @@ Input = function () {
        * @param {Object} json
        * @returns {Input}
        */ }, { key: 'toRaw', value: function toRaw()
+
+
+
+
+
 
 
 
@@ -130,7 +136,7 @@ Input = function () {
        * Instantiate input from serialized data.
        * @param {Buffer} data
        * @returns {Input}
-       */ }], [{ key: 'fromJSON', value: function fromJSON(json) {(0, _assert2.default)(json, 'Input data is required.');if (json.depositId) {return new Input(json.depositId);}if (json.hash) {var input = new Input(_outpoint2.default.fromJSON(json));if (json.signer) {input.setSig(json.r, json.s, json.v, json.signer);}return input;}return null;} }, { key: 'fromRaw', value: function fromRaw(
+       */ }], [{ key: 'fromJSON', value: function fromJSON(json) {(0, _assert2.default)(json, 'Input data is required.');if (json.depositId) {return new Input(json.depositId);}if (json.hash) {var input = new Input(_outpoint2.default.fromJSON(json));if (json.signer) {input.setSig(_ethereumjsUtil2.default.toBuffer(json.r), _ethereumjsUtil2.default.toBuffer(json.s), json.v, json.signer);}return input;}return null;} }, { key: 'fromRaw', value: function fromRaw(
     buf, offset, sigHashBuf) {
       var off = offset || 0;
       var prevout = new _outpoint2.default(buf.slice(0 + off, 32 + off), buf.readUInt8(32 + off));

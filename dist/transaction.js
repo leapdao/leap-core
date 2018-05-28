@@ -180,7 +180,31 @@ Transaction = function () {
       }
 
       return Buffer.concat([payload, (0, _util.arrayToRaw)(this.inputs), (0, _util.arrayToRaw)(this.outputs)]);
-    } }], [{ key: 'coinbase', value: function coinbase(value, address) {return new Transaction(Type.COINBASE, [], [new _output3.default(value, address)]);} }, { key: 'deposit', value: function deposit(depositId, value, address) {return new Transaction(Type.DEPOSIT, [], [new _output3.default(value, address)], { depositId: depositId });} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'parseToParams', value: function parseToParams(
+    } }, { key: 'toJSON', value: function toJSON()
+
+    {
+      var json = {
+        type: this.type,
+        hash: this.hash(),
+        inputs: this.inputs.map(function (inp) {return inp.toJSON();}),
+        outputs: this.outputs.map(function (out) {return out.toJSON();}) };
+
+
+      if (this.options) {
+        json.options = this.options;
+      }
+
+      return json;
+    } }], [{ key: 'coinbase', value: function coinbase(value, address) {return new Transaction(Type.COINBASE, [], [new _output3.default(value, address)]);} }, { key: 'deposit', value: function deposit(depositId, value, address) {return new Transaction(Type.DEPOSIT, [], [new _output3.default(value, address)], { depositId: depositId });} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'fromJSON', value: function fromJSON(_ref)
+
+    {var type = _ref.type,inputs = _ref.inputs,outputs = _ref.outputs,options = _ref.options;
+      return new Transaction(
+      type,
+      inputs.map(_input2.default.fromJSON),
+      outputs.map(_output3.default.fromJSON),
+      options);
+
+    } }, { key: 'parseToParams', value: function parseToParams(
 
     transaction) {
       var bufs = this.parseToBuf(transaction);
