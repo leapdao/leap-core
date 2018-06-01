@@ -106,8 +106,6 @@ Block = function () {
       }
       var slices = [];
       slices.push(this.hash());
-      slices.push((0, _ethereumjsUtil.bufferToHex)(this.r));
-      slices.push((0, _ethereumjsUtil.bufferToHex)(this.s));
 
       // Slices with tx metadata, v-sig and tx data
       // metadata size is 13 bytes (see proof structure above)

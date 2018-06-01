@@ -64,5 +64,8 @@ Block = function () {
 
       // merge and return
       blockProof.forEach(function (elem) {return proof.push(elem);});
+
+      // replace root
+      proof[0] = this.merkleRoot();
       return proof;
     } }]);return Block;}();exports.default = Block;module.exports = exports['default'];
