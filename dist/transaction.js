@@ -3,6 +3,7 @@ var _fastEquals = require('fast-equals');
 
 var _input = require('./input');var _input2 = _interopRequireDefault(_input);
 var _output2 = require('./output');var _output3 = _interopRequireDefault(_output2);
+var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
 var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 var EMPTY_BUF = Buffer.alloc(32, 0);
@@ -13,7 +14,8 @@ var Type = exports.Type = {
   TRANSFER: 3,
   ACCOUNT_SIM: 4,
   COMP_REQ: 5,
-  COMP_RESP: 6 };var
+  COMP_RESP: 6,
+  EXIT: 7 };var
 
 
 
@@ -30,6 +32,10 @@ Transaction = function () {
       this.recoverTxSigner();
     }
   }(0, _createClass3.default)(Transaction, [{ key: 'recoverTxSigner',
+
+
+
+
 
 
 
@@ -99,7 +105,7 @@ Transaction = function () {
     // Returns tx hash as Buffer
   }, { key: 'hashBuf', value: function hashBuf() {
       var raw = this.toRaw();
-      if (raw.slice(34, 66).equals(EMPTY_BUF)) {
+      if (this.type === Type.TRANSFER && raw.slice(34, 66).equals(EMPTY_BUF)) {
         throw Error('not signed yet');
       }
       return _ethereumjsUtil2.default.sha3(raw);
@@ -164,22 +170,32 @@ Transaction = function () {
       * */ }, { key: 'toRaw', value: function toRaw()
     {
       var payload = void 0;
+      var inputs = [];
       if (this.type === Type.DEPOSIT) {
         payload = Buffer.alloc(5, 0);
         payload.writeUInt8(this.type, 0);
         payload.writeUInt32BE(this.options.depositId, 1);
-      } else if (this.type === Type.TRANSFER) {
+      } else
+      if (this.type === Type.EXIT) {
+        payload = Buffer.alloc(34, 0);
+        payload.writeUInt8(this.type, 0);
+        (0, _util.arrayToRaw)(this.inputs).copy(payload, 1, 0, 33);
+      } else
+      if (this.type === Type.TRANSFER) {
         payload = Buffer.alloc(10, 0);
         payload.writeUInt8(this.type, 0);
         (0, _util.writeUint64)(payload, this.options.height, 1);
         // write ins and outs length as nibbles
         payload.writeUInt8(16 * this.inputs.length + this.outputs.length, 9);
-      } else {
+        inputs = this.inputs;
+      } else
+      {
         payload = Buffer.alloc(1, 0);
         payload.writeUInt8(this.type, 0);
+        inputs = this.inputs;
       }
 
-      return Buffer.concat([payload, (0, _util.arrayToRaw)(this.inputs), (0, _util.arrayToRaw)(this.outputs)]);
+      return Buffer.concat([payload, (0, _util.arrayToRaw)(inputs), (0, _util.arrayToRaw)(this.outputs)]);
     } }, { key: 'toJSON', value: function toJSON()
 
     {
@@ -195,7 +211,7 @@ Transaction = function () {
       }
 
       return json;
-    } }], [{ key: 'coinbase', value: function coinbase(value, address) {return new Transaction(Type.COINBASE, [], [new _output3.default(value, address)]);} }, { key: 'deposit', value: function deposit(depositId, value, address) {return new Transaction(Type.DEPOSIT, [], [new _output3.default(value, address)], { depositId: depositId });} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'fromJSON', value: function fromJSON(_ref)
+    } }], [{ key: 'coinbase', value: function coinbase(value, address) {return new Transaction(Type.COINBASE, [], [new _output3.default(value, address)]);} }, { key: 'deposit', value: function deposit(depositId, value, address) {return new Transaction(Type.DEPOSIT, [], [new _output3.default(value, address)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(Type.EXIT, [input], []);} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'fromJSON', value: function fromJSON(_ref)
 
     {var type = _ref.type,inputs = _ref.inputs,outputs = _ref.outputs,options = _ref.options;
       return new Transaction(
@@ -235,6 +251,13 @@ Transaction = function () {
             var depositId = dataBuf.readUInt32BE(1);
             var _output = _output3.default.fromRaw(dataBuf.slice(5));
             return new Transaction(Type.DEPOSIT, [], [_output], { depositId: depositId });
+          }
+        case Type.EXIT:{
+            if (dataBuf.length !== 34) {
+              throw new Error('malformed exit tx.');
+            }
+            var outpoint = _outpoint2.default.fromRaw(dataBuf, 1);
+            return new Transaction(Type.EXIT, [new _input2.default(outpoint)], []);
           }
         case Type.TRANSFER:{
             var height = parseInt(dataBuf.slice(1, 9).toString('hex'), 16);

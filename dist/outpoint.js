@@ -91,13 +91,24 @@ Outpoint = function () {
     {
       return OUTPOINT_LENGTH;
     }
-    /* eslint-enable class-methods-use-this */
+    /* eslint-enable class-methods-use-this */ }, { key: 'getUtxoId', value: function getUtxoId()
+
+    {
+      var dataBuf = Buffer.alloc(32);
+      this.hash.copy(dataBuf, 0);
+      dataBuf.writeInt32BE(0, 0);
+      dataBuf.writeInt32BE(0, 4);
+      dataBuf.writeInt32BE(0, 8);
+      dataBuf.writeInt32BE(0, 12);
+      dataBuf.writeUInt8(this.index, 16);
+      return (0, _util.toHexString)(dataBuf);
+    }
 
     /**
-                                                * Instantiate outpoint from serialized data.
-                                                * @param {Buffer} data
-                                                * @returns {Outpoint}
-                                                */ }, { key: 'toRaw', value: function toRaw(
+       * Instantiate outpoint from serialized data.
+       * @param {Buffer} data
+       * @returns {Outpoint}
+       */ }, { key: 'toRaw', value: function toRaw(
 
 
 
@@ -114,7 +125,7 @@ Outpoint = function () {
        * Instantiate outpoint from json object.
        * @param {Object} json
        * @returns {Outpoint}
-       */ }], [{ key: 'isOutpoint', value: function isOutpoint(obj) {return obj instanceof Outpoint;} }, { key: 'fromRaw', value: function fromRaw(buf) {return new Outpoint(buf.slice(0, 32), buf.readUInt8(32));} }, { key: 'fromJSON', value: function fromJSON(
+       */ }], [{ key: 'isOutpoint', value: function isOutpoint(obj) {return obj instanceof Outpoint;} }, { key: 'fromRaw', value: function fromRaw(buf) {var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;return new Outpoint(buf.slice(0 + offset, 32 + offset), buf.readUInt8(32 + offset));} }, { key: 'fromJSON', value: function fromJSON(
     json) {
       (0, _assert2.default)(json, 'Outpoint data is required.');
       return new Outpoint(json.hash, json.index);
