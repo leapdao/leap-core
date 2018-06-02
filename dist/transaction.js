@@ -230,9 +230,12 @@ Transaction = function () {
     // Constructs Transaction from given raw bytes
     // @returns {Transaction}
   }, { key: 'fromRaw', value: function fromRaw(transaction) {
-      var dataHex = transaction.replace('0x', '');
-      var dataBuf = Buffer.alloc(dataHex.length / 2);
-      dataBuf.write(dataHex, 'hex');
+      var dataBuf = transaction;
+      if (!Buffer.isBuffer(transaction)) {
+        var dataHex = transaction.replace('0x', '');
+        dataBuf = Buffer.alloc(dataHex.length / 2);
+        dataBuf.write(dataHex, 'hex');
+      }
 
       var type = dataBuf.readUInt8(0);
 

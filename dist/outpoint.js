@@ -113,6 +113,12 @@ Outpoint = function () {
 
 
 
+
+
+
+
+
+
     buf, offset) {
       var dataBuf = buf || Buffer.alloc(this.getSize());
       var off = offset || 0;
@@ -121,11 +127,16 @@ Outpoint = function () {
       return dataBuf;
     }
 
+    // Returns serialized tx bytes as hex string
+  }, { key: 'hex', value: function hex() {
+      return (0, _util.toHexString)(this.toRaw());
+    }
+
     /**
        * Instantiate outpoint from json object.
        * @param {Object} json
        * @returns {Outpoint}
-       */ }], [{ key: 'isOutpoint', value: function isOutpoint(obj) {return obj instanceof Outpoint;} }, { key: 'fromRaw', value: function fromRaw(buf) {var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;return new Outpoint(buf.slice(0 + offset, 32 + offset), buf.readUInt8(32 + offset));} }, { key: 'fromJSON', value: function fromJSON(
+       */ }], [{ key: 'isOutpoint', value: function isOutpoint(obj) {return obj instanceof Outpoint;} }, { key: 'fromRaw', value: function fromRaw(raw) {var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;var dataBuf = raw;if (!Buffer.isBuffer(raw)) {var dataHex = raw.replace('0x', '');dataBuf = Buffer.alloc(dataHex.length / 2);dataBuf.write(dataHex, 'hex');}return new Outpoint(dataBuf.slice(0 + offset, 32 + offset), dataBuf.readUInt8(32 + offset));} }, { key: 'fromJSON', value: function fromJSON(
     json) {
       (0, _assert2.default)(json, 'Outpoint data is required.');
       return new Outpoint(json.hash, json.index);
