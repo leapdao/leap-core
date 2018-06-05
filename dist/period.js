@@ -2,14 +2,14 @@
 var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);
 var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
 
-Block = function () {
-  function Block(blocks) {var _this = this;(0, _classCallCheck3.default)(this, Block);
+Period = function () {
+  function Period(blocks) {var _this = this;(0, _classCallCheck3.default)(this, Period);
     this.blockList = [];
     this.blockHashList = [];
     if (blocks) {
       blocks.forEach(function (block) {return _this.addBlock(block);});
     }
-  }(0, _createClass3.default)(Block, [{ key: 'addBlock', value: function addBlock(
+  }(0, _createClass3.default)(Period, [{ key: 'addBlock', value: function addBlock(
 
     block) {
       if (this.blockHashList.indexOf(block.hash()) > -1) {
@@ -68,4 +68,4 @@ Block = function () {
       // replace root
       proof[0] = this.merkleRoot();
       return proof;
-    } }]);return Block;}();exports.default = Block;module.exports = exports['default'];
+    } }]);return Period;}();exports.default = Period;module.exports = exports['default'];
