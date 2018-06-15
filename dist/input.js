@@ -12,6 +12,9 @@ Input = function () {
       this.prevout = options;
     } else if (_util2.default.isU32(options)) {
       this.depositId = options;
+    } else if (options && options.contractAddr) {
+      this.contractAddr = options.contractAddr;
+      this.prevout = options.prevout;
     } else {
       (0, _assert2.default)(!options, 'Coinbase input should have no data.');
       this.coinbase = true;
@@ -24,6 +27,10 @@ Input = function () {
 
     {
       return this.coinbase;
+    } }, { key: 'isComputation', value: function isComputation()
+
+    {
+      return this.contractAddr;
     } }, { key: 'isDeposit', value: function isDeposit()
 
     {
@@ -42,6 +49,9 @@ Input = function () {
     {
       if (this.isDeposit()) {
         return 4;
+      }
+      if (this.isComputation()) {
+        return 33;
       }
       if (this.isSpend()) {
         return SPEND_INPUT_LENGTH;
@@ -77,16 +87,21 @@ Input = function () {
           depositId: this.depositId };
 
       }
-      if (this.isSpend()) {
+      if (this.isComputation()) {
         var input = (0, _extends3.default)({}, this.prevout); // toJSON shouldn't mutate existing objects
         input.hash = _ethereumjsUtil2.default.bufferToHex(input.hash);
-        if (this.signer) {
-          input.r = _ethereumjsUtil2.default.bufferToHex(this.r);
-          input.s = _ethereumjsUtil2.default.bufferToHex(this.s);
-          input.v = this.v;
-          input.signer = this.signer;
-        }
         return input;
+      }
+      if (this.isSpend()) {
+        var _input = (0, _extends3.default)({}, this.prevout); // toJSON shouldn't mutate existing objects
+        _input.hash = _ethereumjsUtil2.default.bufferToHex(_input.hash);
+        if (this.signer) {
+          _input.r = _ethereumjsUtil2.default.bufferToHex(this.r);
+          _input.s = _ethereumjsUtil2.default.bufferToHex(this.s);
+          _input.v = this.v;
+          _input.signer = this.signer;
+        }
+        return _input;
       }
       return {};
     }
@@ -116,12 +131,16 @@ Input = function () {
 
 
 
+
+
+
     {
       var dataBuf = Buffer.alloc(this.getSize());
       if (this.isDeposit()) {
         dataBuf.writeUInt32BE(this.depositId);
-      }
-      if (this.isSpend()) {
+      } else if (this.isComputation()) {
+        this.prevout.toRaw(dataBuf, 0);
+      } else if (this.isSpend()) {
         this.prevout.toRaw(dataBuf, 0);
         if (this.signer) {
           this.r.copy(dataBuf, 33);
@@ -136,16 +155,21 @@ Input = function () {
        * Instantiate input from serialized data.
        * @param {Buffer} data
        * @returns {Input}
-       */ }], [{ key: 'fromJSON', value: function fromJSON(json) {(0, _assert2.default)(json, 'Input data is required.');if (json.depositId) {return new Input(json.depositId);}if (json.hash) {var input = new Input(_outpoint2.default.fromJSON(json));if (json.signer) {input.setSig(_ethereumjsUtil2.default.toBuffer(json.r), _ethereumjsUtil2.default.toBuffer(json.s), json.v, json.signer);}return input;}return null;} }, { key: 'fromRaw', value: function fromRaw(
+       */ }], [{ key: 'fromJSON', value: function fromJSON(json) {(0, _assert2.default)(json, 'Input data is required.');if (json.depositId) {return new Input(json.depositId);}if (json.hash) {var input = new Input(_outpoint2.default.fromJSON(json));if (json.signer) {input.setSig(_ethereumjsUtil2.default.toBuffer(json.r), _ethereumjsUtil2.default.toBuffer(json.s), json.v, json.signer);}if (json.contractAddr) {input.contractAddr = json.contractAddr;}return input;}return null;} }, { key: 'fromRaw', value: function fromRaw(
     buf, offset, sigHashBuf) {
       var off = offset || 0;
       var prevout = new _outpoint2.default(buf.slice(0 + off, 32 + off), buf.readUInt8(32 + off));
-      var input = new Input(prevout);
-      var r = buf.slice(33 + off, 65 + off);
-      var s = buf.slice(65 + off, 97 + off);
-      var v = buf.readUInt8(97 + off);
-      var signer = sigHashBuf ? Input.recoverSignerAddress(sigHashBuf, v, r, s) : '';
-      input.setSig(r, s, v, signer);
+      var input = void 0;
+      if (sigHashBuf) {
+        input = new Input(prevout);
+        var r = buf.slice(33 + off, 65 + off);
+        var s = buf.slice(65 + off, 97 + off);
+        var v = buf.readUInt8(97 + off);
+        var signer = Input.recoverSignerAddress(sigHashBuf, v, r, s);
+        input.setSig(r, s, v, signer);
+      } else {
+        input = new Input({ prevout: prevout, contractAddr: '0x00' });
+      }
       return input;
     }
 

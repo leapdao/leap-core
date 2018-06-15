@@ -51,6 +51,14 @@ Transaction = function () {
 
 
 
+
+
+
+
+
+
+
+
     // Recovers signer address for each of the inputs
     // Requires inputs to be signed.
     value: function recoverTxSigner() {var _this = this;
@@ -62,20 +70,23 @@ Transaction = function () {
     // 1. serialize to bytes
     // 2. strip out input signatures
     // 3. calc sha3
-  }, { key: 'sigHashBuf', value: function sigHashBuf() {
-      var raw = this.toRaw();
-      var noSigs = Buffer.alloc(raw.length, 0);
-      // copy type, height and lengths
-      raw.copy(noSigs, 0, 0, 10);
+  }, { key: 'sigHashBuf', value: function sigHashBuf()
 
-      var start = void 0;
-      for (var i = 0; i < this.inputs.length; i += 1) {
-        start = 10 + i * 98;
-        raw.copy(noSigs, start, start, start + 33);
-      }
-      start = 10 + this.inputs.length * 98;
-      raw.copy(noSigs, start, start, raw.length);
-      return _ethereumjsUtil2.default.sha3(noSigs);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+      return Transaction.sigHashBufStatic(this.type, this.toRaw(), this.inputs.length);
     }
 
     // Returns sigHash as hex string
@@ -89,10 +100,10 @@ Transaction = function () {
       if (privKeys.length !== this.inputs.length) {
         throw Error('amount of private keys doesn\'t match amount of inputs');
       }
-      for (var i = 0; i < privKeys.length; i++) {
+      for (var i = this.type === Type.TRANSFER ? 0 : 1; i < privKeys.length; i++) {
         var sig = _ethereumjsUtil2.default.ecsign(
         this.sigHashBuf(),
-        new Buffer(privKeys[i].replace('0x', ''), 'hex'));
+        Buffer.from(privKeys[i].replace('0x', ''), 'hex'));
 
         this.inputs[i].setSig(
         sig.r, sig.s, sig.v, // sig
@@ -175,26 +186,29 @@ Transaction = function () {
         payload = Buffer.alloc(5, 0);
         payload.writeUInt8(this.type, 0);
         payload.writeUInt32BE(this.options.depositId, 1);
-      } else
-      if (this.type === Type.EXIT) {
+      } else if (this.type === Type.EXIT) {
         payload = Buffer.alloc(34, 0);
         payload.writeUInt8(this.type, 0);
         (0, _util.arrayToRaw)(this.inputs).copy(payload, 1, 0, 33);
-      } else
-      if (this.type === Type.TRANSFER) {
+      } else if (this.type === Type.TRANSFER) {
         payload = Buffer.alloc(10, 0);
         payload.writeUInt8(this.type, 0);
         (0, _util.writeUint64)(payload, this.options.height, 1);
         // write ins and outs length as nibbles
         payload.writeUInt8(16 * this.inputs.length + this.outputs.length, 9);
         inputs = this.inputs;
-      } else
-      {
+      } else if (this.type === Type.COMP_REQ || this.type === Type.COMP_RESP) {
+        payload = Buffer.alloc(2, 0);
+        payload.writeUInt8(this.type, 0);
+        this.inputs[0].contractAddr = '0x00';
+        // write ins and outs length as nibbles
+        payload.writeUInt8(16 * this.inputs.length + this.outputs.length, 1);
+        inputs = this.inputs;
+      } else {
         payload = Buffer.alloc(1, 0);
         payload.writeUInt8(this.type, 0);
         inputs = this.inputs;
       }
-
       return Buffer.concat([payload, (0, _util.arrayToRaw)(inputs), (0, _util.arrayToRaw)(this.outputs)]);
     } }, { key: 'toJSON', value: function toJSON()
 
@@ -211,8 +225,8 @@ Transaction = function () {
       }
 
       return json;
-    } }], [{ key: 'coinbase', value: function coinbase(value, address) {return new Transaction(Type.COINBASE, [], [new _output3.default(value, address)]);} }, { key: 'deposit', value: function deposit(depositId, value, address) {return new Transaction(Type.DEPOSIT, [], [new _output3.default(value, address)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(Type.EXIT, [input], []);} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'fromJSON', value: function fromJSON(_ref)
-
+    } }], [{ key: 'coinbase', value: function coinbase(value, address) {return new Transaction(Type.COINBASE, [], [new _output3.default(value, address)]);} }, { key: 'deposit', value: function deposit(depositId, value, address) {return new Transaction(Type.DEPOSIT, [], [new _output3.default(value, address)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(Type.EXIT, [input], []);} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {return new Transaction(Type.COMP_REQ, inputs, outputs);} }, { key: 'compResponse', value: function compResponse(inputs, outputs) {return new Transaction(Type.COMP_RESP, inputs, outputs);} }, { key: 'sigHashBufStatic', value: function sigHashBufStatic(type, raw, inputsLength) {var noSigs = Buffer.alloc(raw.length, 0);var offset = type === Type.TRANSFER ? 10 : 2; // copy type, height and lengths
+      raw.copy(noSigs, 0, 0, offset);for (var i = 0; i < inputsLength; i += 1) {raw.copy(noSigs, offset, offset, offset + 33);offset += type !== Type.TRANSFER && i === 0 ? 33 : 98;}raw.copy(noSigs, offset, offset, raw.length);return _ethereumjsUtil2.default.sha3(noSigs);} }, { key: 'fromJSON', value: function fromJSON(_ref)
     {var type = _ref.type,inputs = _ref.inputs,outputs = _ref.outputs,options = _ref.options;
       return new Transaction(
       type,
@@ -268,8 +282,9 @@ Transaction = function () {
             var insLength = insOuts >> 4; // eslint-disable-line no-bitwise
             var outsLength = insOuts & 0xF; // eslint-disable-line no-bitwise
             var ins = [];
+            var sigHashBuf = Transaction.sigHashBufStatic(type, dataBuf, insLength);
             for (var i = 0; i < insLength; i += 1) {
-              ins.push(_input2.default.fromRaw(dataBuf, 10 + i * _input.SPEND_INPUT_LENGTH));
+              ins.push(_input2.default.fromRaw(dataBuf, 10 + i * _input.SPEND_INPUT_LENGTH, sigHashBuf));
             }
             var outs = [];
             for (var _i = 0; _i < outsLength; _i += 1) {
@@ -279,6 +294,39 @@ Transaction = function () {
 
             }
             return new Transaction(Type.TRANSFER, ins, outs, { height: height });
+          }
+        case Type.COMP_REQ:{
+            var _insOuts = dataBuf.readUInt8(1);
+            var _insLength = _insOuts >> 4; // eslint-disable-line no-bitwise
+            var _outsLength = _insOuts & 0xF; // eslint-disable-line no-bitwise
+            var _ins = [];
+            _ins.push(_input2.default.fromRaw(dataBuf, 2));
+            var _sigHashBuf = Transaction.sigHashBufStatic(type, dataBuf, _insLength);
+            for (var _i2 = 1; _i2 < _insLength; _i2 += 1) {
+              _ins.push(_input2.default.fromRaw(dataBuf, 35 + (_i2 - 1) * _input.SPEND_INPUT_LENGTH, _sigHashBuf));
+            }
+            var _outs = [];
+            for (var _i3 = 0; _i3 < _outsLength; _i3 += 1) {
+              var isComp = _i3 === 0 ? 1 : 0;
+              _outs.push(_output3.default.fromRaw(
+              dataBuf,
+              35 + (_insLength - 1) * _input.SPEND_INPUT_LENGTH + _i3 * _output2.OUT_LENGTH,
+              isComp));
+
+            }
+            return new Transaction(Type.COMP_REQ, _ins, _outs);
+          }
+        case Type.COMP_RESP:{
+            var _insOuts2 = dataBuf.readUInt8(1);
+            var _outsLength2 = _insOuts2 & 0xF; // eslint-disable-line no-bitwise
+            var _ins2 = [];
+            _ins2.push(_input2.default.fromRaw(dataBuf, 2));
+            var _outs2 = [];
+            _outs2.push(_output3.default.fromRaw(dataBuf, 35, 2));
+            for (var _i4 = 1; _i4 < _outsLength2; _i4 += 1) {
+              _outs2.push(_output3.default.fromRaw(dataBuf, 95 + (_i4 - 1) * _output2.OUT_LENGTH));
+            }
+            return new Transaction(Type.COMP_RESP, _ins2, _outs2);
           }
         default:{
             throw new Error('unknown transaction type: ' + type + '.');
