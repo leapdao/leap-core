@@ -302,17 +302,18 @@ Transaction = function () {
             var _ins = [];
             _ins.push(_input2.default.fromRaw(dataBuf, 2));
             var _sigHashBuf = Transaction.sigHashBufStatic(type, dataBuf, _insLength);
+            var offset = 35;
             for (var _i2 = 1; _i2 < _insLength; _i2 += 1) {
-              _ins.push(_input2.default.fromRaw(dataBuf, 35 + (_i2 - 1) * _input.SPEND_INPUT_LENGTH, _sigHashBuf));
+              _ins.push(_input2.default.fromRaw(dataBuf, offset, _sigHashBuf));
+              offset += _input.SPEND_INPUT_LENGTH;
             }
             var _outs = [];
-            for (var _i3 = 0; _i3 < _outsLength; _i3 += 1) {
-              var isComp = _i3 === 0 ? 1 : 0;
-              _outs.push(_output3.default.fromRaw(
-              dataBuf,
-              35 + (_insLength - 1) * _input.SPEND_INPUT_LENGTH + _i3 * _output2.OUT_LENGTH,
-              isComp));
-
+            _outs.push(_output3.default.fromRaw(dataBuf, offset, 1));
+            // value 8 + gasPrice 4 + length 2 + length
+            offset += 14 + _outs[0].msgData.length;
+            for (var _i3 = 1; _i3 < _outsLength; _i3 += 1) {
+              _outs.push(_output3.default.fromRaw(dataBuf, offset));
+              offset += _output2.OUT_LENGTH;
             }
             return new Transaction(Type.COMP_REQ, _ins, _outs);
           }
