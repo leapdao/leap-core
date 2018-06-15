@@ -1,12 +1,15 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _log = require('babel-runtime/core-js/math/log2');var _log2 = _interopRequireDefault(_log);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
+var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);
-var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
+var _util = require('./util');
+var _transaction = require('./transaction');var _transaction2 = _interopRequireDefault(_transaction);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
 
 Block = function () {
-  function Block(height) {(0, _classCallCheck3.default)(this, Block);
+  function Block(height) {var txs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];(0, _classCallCheck3.default)(this, Block);
     this.height = height;
-    this.txList = [];
-    this.txHashList = [];
+    this.txList = txs;
+    this.txHashList = txs.map(function (tx) {return tx.hash();});
+    this.merkleTree = null;
   }(0, _createClass3.default)(Block, [{ key: 'addTx', value: function addTx(
 
     tx) {
@@ -44,6 +47,78 @@ Block = function () {
       return _ethereumjsUtil2.default.bufferToHex(_ethereumjsUtil2.default.sha3(payload));
     }
 
+    // Returns serialized tx bytes as hex string
+  }, { key: 'hex', value: function hex() {
+      return toHexString(this.toRaw());
+    } }, { key: 'equals', value: function equals(
+
+    another) {
+      return deepEqual(this, another);
+    }
+
+    /*
+      * Returns raw block data size
+      */ }, { key: 'getSize', value: function getSize()
+    {
+      // 8 bytes height + for each tx( X bytes raw tx size + 4 bytes raw tx length )
+      return 8 + this.txList.reduce(function (s, tx) {return s += tx.getSize() + 4;}, 0);
+    } }, { key: 'toJSON', value: function toJSON()
+
+    {
+      return {
+        height: this.height,
+        txs: this.txList.map(function (tx) {return tx.toJSON();}) };
+
+    } }, { key: 'toRaw',
+
+
+
+
+
+    /*
+                         * Returns {Buffer} with raw serialized block bytes
+                         *
+                         * 8 bytes - height
+                         * [
+                         *  4 bytes - tx 1 length,
+                         *  X bytes - tx 1 data,
+                         *  4 bytes - tx 2 length,
+                         *  X bytes - tx 2 data,
+                         *  ...
+                         * ]
+                         *
+                         * Also: `fromRaw`
+                         */value: function toRaw()
+    {
+      var payload = Buffer.alloc(this.getSize(), 0);
+      (0, _util.writeUint64)(payload, this.height, 0);
+      var offset = 8,rawTx = void 0;
+      this.txList.forEach(function (tx) {
+        rawTx = tx.toRaw();
+        (0, _assert2.default)(rawTx.length <= Math.pow(2, 32));
+        payload.writeUInt32BE(rawTx.length, offset);
+        rawTx.copy(payload, offset + 4);
+        offset += rawTx.length + 4;
+      });
+      return payload;
+    }
+
+    /*
+      * Creates block from raw serialized bytes
+      * Also: `toRaw`
+      */ }, { key: 'proof',
+
+
+
+
+
+
+
+
+
+
+
+
     // Returns proof of block inclusion for given tx
     // [
     // 32b - blockHash
@@ -60,7 +135,7 @@ Block = function () {
     // 32b - proof,
     // ... <more 32b proofs if needed>
     // ]
-  }, { key: 'proof', value: function proof(tx) {var proofOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    value: function proof(tx) {var proofOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       var txData = tx.toRaw();
       var pos = this.txHashList.indexOf(tx.hash());
       if (pos < 0) {
@@ -115,4 +190,4 @@ Block = function () {
 
       // Add slices with proofs and return
       return slices.concat(proofs);
-    } }]);return Block;}();exports.default = Block;module.exports = exports['default'];
+    } }], [{ key: 'fromJSON', value: function fromJSON(_ref) {var height = _ref.height,txs = _ref.txs;return new Block(height, txs.map(_transaction2.default.fromJSON));} }, { key: 'fromRaw', value: function fromRaw(buf) {var height = (0, _util.readUint64)(buf);var block = new Block(height);var offset = 8,txSize = void 0;while (offset < buf.length) {txSize = buf.readUInt32BE(offset);block.addTx(_transaction2.default.fromRaw(buf.slice(offset + 4, offset + 4 + txSize)));offset += txSize + 4;}return block;} }]);return Block;}();exports.default = Block;module.exports = exports['default'];

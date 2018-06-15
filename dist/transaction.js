@@ -31,7 +31,7 @@ Transaction = function () {
     if (this.inputs.length && this.inputs[0].v && !this.inputs[0].signer) {
       this.recoverTxSigner();
     }
-  }(0, _createClass3.default)(Transaction, [{ key: 'recoverTxSigner',
+  }(0, _createClass3.default)(Transaction, [{ key: 'getSize',
 
 
 
@@ -58,10 +58,30 @@ Transaction = function () {
 
 
 
+
+    /*
+                                                              * Returns raw transaction size.
+                                                              * See `toRaw` for details.
+                                                              */value: function getSize()
+    {
+      if (this.type === Type.COINBASE) {
+        return 29;
+      }
+      if (this.type === Type.DEPOSIT) {
+        return 33;
+      }
+      if (this.type === Type.TRANSFER) {
+        var size = 10 +
+        this.inputs.reduce(function (s, i) {return s += i.getSize();}) +
+        this.outputs.reduce(function (s, o) {return s += o.getSize();});
+      }
+
+      return this.toRaw().length;
+    }
 
     // Recovers signer address for each of the inputs
     // Requires inputs to be signed.
-    value: function recoverTxSigner() {var _this = this;
+  }, { key: 'recoverTxSigner', value: function recoverTxSigner() {var _this = this;
       this.inputs.map(function (i) {return i.recoverSigner(_this.sigHashBuf());});
     }
 
@@ -277,7 +297,7 @@ Transaction = function () {
             return new Transaction(Type.EXIT, [new _input2.default(outpoint)], []);
           }
         case Type.TRANSFER:{
-            var height = parseInt(dataBuf.slice(1, 9).toString('hex'), 16);
+            var height = (0, _util.readUint64)(dataBuf, 1);
             var insOuts = dataBuf.readUInt8(9);
             var insLength = insOuts >> 4; // eslint-disable-line no-bitwise
             var outsLength = insOuts & 0xF; // eslint-disable-line no-bitwise
