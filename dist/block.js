@@ -33,7 +33,7 @@ Block = function () {
     } }, { key: 'merkleRoot', value: function merkleRoot()
 
     {
-      return this.getMerkleTree().getHexRoot();
+      return this.getMerkleTree().getHexRoot().toString();
     } }, { key: 'header', value: function header(
 
     payload) {
