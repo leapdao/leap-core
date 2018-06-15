@@ -1,9 +1,9 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
-var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);
-var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');
+var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
 
 Period = function () {
-  function Period(blocks) {var _this = this;(0, _classCallCheck3.default)(this, Period);
+  function Period(prevHash, blocks) {var _this = this;(0, _classCallCheck3.default)(this, Period);
+    this.prevHash = prevHash;
     this.blockList = [];
     this.blockHashList = [];
     if (blocks) {
@@ -24,7 +24,7 @@ Period = function () {
     } }, { key: 'getMerkleTree', value: function getMerkleTree()
 
     {
-      if (this.blockList.length == 0) {
+      if (this.blockList.length === 0) {
         throw Error('no blocks contained');
       }
       if (!this.merkleTree) {

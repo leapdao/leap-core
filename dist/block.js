@@ -3,8 +3,7 @@ var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefa
 var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
 
 Block = function () {
-  function Block(parent, height) {(0, _classCallCheck3.default)(this, Block);
-    this.parent = parent;
+  function Block(height) {(0, _classCallCheck3.default)(this, Block);
     this.height = height;
     this.txList = [];
     this.txHashList = [];
@@ -32,37 +31,16 @@ Block = function () {
 
     {
       return this.getMerkleTree().getHexRoot();
-    } }, { key: 'unsignedHeader', value: function unsignedHeader(
+    } }, { key: 'header', value: function header(
 
     payload) {
-      payload.write(this.parent.replace('0x', ''), 0, 'hex');
-      (0, _util.writeUint64)(payload, this.height, 32);
-      payload.write(this.merkleRoot().replace('0x', ''), 40, 'hex');
+      (0, _util.writeUint64)(payload, this.height, 0);
+      payload.write(this.merkleRoot().replace('0x', ''), 8, 'hex');
       return payload;
-    } }, { key: 'sigHash', value: function sigHash()
-
-    {
-      return _ethereumjsUtil2.default.sha3(this.unsignedHeader(Buffer.alloc(72, 0)));
-    } }, { key: 'sign', value: function sign(
-
-    privKey) {
-      var privBuf = (0, _ethereumjsUtil.toBuffer)(privKey);
-      var sig = _ethereumjsUtil2.default.ecsign(this.sigHash(), privBuf);
-      this.v = sig.v;
-      this.r = sig.r;
-      this.s = sig.s;
-      return [sig.v, (0, _ethereumjsUtil.bufferToHex)(sig.r), (0, _ethereumjsUtil.bufferToHex)(sig.s)];
     } }, { key: 'hash', value: function hash()
 
     {
-      if (!this.v || !this.r || !this.s) {
-        throw new Error('not signed yet');
-      }
-      var payload = this.unsignedHeader(Buffer.alloc(137, 0));
-
-      payload.writeUInt8(this.v, 72);
-      this.r.copy(payload, 73);
-      this.s.copy(payload, 105);
+      var payload = this.header(Buffer.alloc(40, 0));
       return _ethereumjsUtil2.default.bufferToHex(_ethereumjsUtil2.default.sha3(payload));
     }
 
@@ -91,15 +69,15 @@ Block = function () {
       if (proofOffset > 0) {
         // 1. find size of block (rounded pow 2)
         var nextPow = this.txList.length - 1;
-        nextPow |= nextPow >> 1;
-        nextPow |= nextPow >> 2;
-        nextPow |= nextPow >> 4;
-        nextPow |= nextPow >> 8;
-        nextPow |= nextPow >> 16;
+        nextPow |= nextPow >> 1; // eslint-disable-line no-bitwise
+        nextPow |= nextPow >> 2; // eslint-disable-line no-bitwise
+        nextPow |= nextPow >> 4; // eslint-disable-line no-bitwise
+        nextPow |= nextPow >> 8; // eslint-disable-line no-bitwise
+        nextPow |= nextPow >> 16; // eslint-disable-line no-bitwise
         nextPow++;
         // 2. shift proofOffset
         // 3. add numbers
-        pos += proofOffset << (0, _log2.default)(nextPow);
+        pos += proofOffset << (0, _log2.default)(nextPow); // eslint-disable-line no-bitwise
       }
       var slices = [];
       slices.push(this.hash());
