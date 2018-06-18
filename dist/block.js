@@ -49,7 +49,7 @@ Block = function () {
 
     // Returns serialized tx bytes as hex string
   }, { key: 'hex', value: function hex() {
-      return toHexString(this.toRaw());
+      return (0, _util.toHexString)(this.toRaw());
     } }, { key: 'equals', value: function equals(
 
     another) {
