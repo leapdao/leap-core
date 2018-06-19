@@ -19,8 +19,7 @@ const block = new Block(parent, height);
 block.proof(transfer.toRaw(), position, [SIBLING_HASH, SIBLING_HASH])
 ```
 
-## Create Tip Proof:
 
-```
-tbd
-```
+## LICENSE
+
+Most Parsec Lib source files (lib folder and below) are made available under the terms of the GNU Affero General Public License (GNU AGPLv3). See individual files for details.
