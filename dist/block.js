@@ -5,10 +5,12 @@ var _util = require('./util');
 var _transaction = require('./transaction');var _transaction2 = _interopRequireDefault(_transaction);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
 
 Block = function () {
-  function Block(height) {var txs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];(0, _classCallCheck3.default)(this, Block);
+  function Block(height, options) {(0, _classCallCheck3.default)(this, Block);var _ref =
+    options || {},timestamp = _ref.timestamp,txs = _ref.txs;
     this.height = height;
-    this.txList = txs;
-    this.txHashList = txs.map(function (tx) {return tx.hash();});
+    this.timestamp = timestamp;
+    this.txList = txs || [];
+    this.txHashList = this.txList.map(function (tx) {return tx.hash();});
     this.merkleTree = null;
   }(0, _createClass3.default)(Block, [{ key: 'addTx', value: function addTx(
 
@@ -60,13 +62,14 @@ Block = function () {
       * Returns raw block data size
       */ }, { key: 'getSize', value: function getSize()
     {
-      // 8 bytes height + for each tx( X bytes raw tx size + 4 bytes raw tx length )
-      return 8 + this.txList.reduce(function (s, tx) {return s += tx.getSize() + 4;}, 0);
+      // 8 bytes height + 4 bytes timestamp + for each tx( X bytes raw tx size + 4 bytes raw tx length )
+      return 12 + this.txList.reduce(function (s, tx) {return s += tx.getSize() + 4;}, 0);
     } }, { key: 'toJSON', value: function toJSON()
 
     {
       return {
         height: this.height,
+        timestamp: this.timestamp,
         txs: this.txList.map(function (tx) {return tx.toJSON();}) };
 
     } }, { key: 'toRaw',
@@ -79,6 +82,7 @@ Block = function () {
                          * Returns {Buffer} with raw serialized block bytes
                          *
                          * 8 bytes - height
+                         * 4 bytes - timestamp
                          * [
                          *  4 bytes - tx 1 length,
                          *  X bytes - tx 1 data,
@@ -92,7 +96,8 @@ Block = function () {
     {
       var payload = Buffer.alloc(this.getSize(), 0);
       (0, _util.writeUint64)(payload, this.height, 0);
-      var offset = 8,rawTx = void 0;
+      payload.writeUInt32BE(this.timestamp, 8);
+      var offset = 12,rawTx = void 0;
       this.txList.forEach(function (tx) {
         rawTx = tx.toRaw();
         (0, _assert2.default)(rawTx.length <= Math.pow(2, 32));
@@ -107,6 +112,7 @@ Block = function () {
       * Creates block from raw serialized bytes
       * Also: `toRaw`
       */ }, { key: 'proof',
+
 
 
 
@@ -190,4 +196,4 @@ Block = function () {
 
       // Add slices with proofs and return
       return slices.concat(proofs);
-    } }], [{ key: 'fromJSON', value: function fromJSON(_ref) {var height = _ref.height,txs = _ref.txs;return new Block(height, txs.map(_transaction2.default.fromJSON));} }, { key: 'fromRaw', value: function fromRaw(buf) {var height = (0, _util.readUint64)(buf);var block = new Block(height);var offset = 8,txSize = void 0;while (offset < buf.length) {txSize = buf.readUInt32BE(offset);block.addTx(_transaction2.default.fromRaw(buf.slice(offset + 4, offset + 4 + txSize)));offset += txSize + 4;}return block;} }]);return Block;}();exports.default = Block;module.exports = exports['default'];
+    } }], [{ key: 'fromJSON', value: function fromJSON(_ref2) {var height = _ref2.height,timestamp = _ref2.timestamp,txs = _ref2.txs;return new Block(height, { timestamp: timestamp, txs: txs.map(_transaction2.default.fromJSON) });} }, { key: 'fromRaw', value: function fromRaw(buf) {var height = (0, _util.readUint64)(buf);var timestamp = buf.readUInt32BE(8);var block = new Block(height, { timestamp: timestamp });var offset = 12,txSize = void 0;while (offset < buf.length) {txSize = buf.readUInt32BE(offset);block.addTx(_transaction2.default.fromRaw(buf.slice(offset + 4, offset + 4 + txSize)));offset += txSize + 4;}return block;} }]);return Block;}();exports.default = Block;module.exports = exports['default'];
