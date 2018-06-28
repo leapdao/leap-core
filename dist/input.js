@@ -1,16 +1,25 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.SPEND_INPUT_LENGTH = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.SPEND_INPUT_LENGTH = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
+
+
+
+
+
+
+
+
+var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
 var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 // outpoint(32 bytes prev tx + 1 byte output pos) + 65 bytes signature
-var SPEND_INPUT_LENGTH = exports.SPEND_INPUT_LENGTH = 33 + 65;var
-
-Input = function () {
-  function Input(options) {(0, _classCallCheck3.default)(this, Input);
-    if (_outpoint2.default.isOutpoint(options)) {
-      this.prevout = options;
-    } else if (_util2.default.isU32(options)) {
+/**
+ * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+ *
+ * This source code is licensed under the GNU Affero General Public License,
+ * version 3, found in the LICENSE file in the root directory of this source
+ * tree.
+ */var SPEND_INPUT_LENGTH = exports.SPEND_INPUT_LENGTH = 33 + 65;var Input = function () {function Input(options) {(0, _classCallCheck3.default)(this, Input);if (_outpoint2.default.isOutpoint(options)) {this.prevout = options;} else if (_util2.default.isU32(options)) {
       this.depositId = options;
     } else if (options && options.contractAddr) {
       this.contractAddr = options.contractAddr;

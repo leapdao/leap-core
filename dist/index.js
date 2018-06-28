@@ -1,9 +1,18 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Util = exports.Outpoint = exports.Output = exports.Input = exports.Type = exports.Tx = exports.Block = exports.Period = undefined;var _period = require('./period');var _period2 = _interopRequireDefault(_period);
-var _block = require('./block');var _block2 = _interopRequireDefault(_block);
-var _transaction = require('./transaction');var _transaction2 = _interopRequireDefault(_transaction);
-var _input = require('./input');var _input2 = _interopRequireDefault(_input);
-var _output = require('./output');var _output2 = _interopRequireDefault(_output);
-var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
-var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}exports.
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.helpers = exports.Util = exports.Outpoint = exports.Output = exports.Input = exports.Type = exports.Tx = exports.Block = exports.Period = undefined;var _period = require('./period');Object.defineProperty(exports, 'Period', { enumerable: true, get: function get() {return _interopRequireDefault(_period).
 
-Period = _period2.default;exports.Block = _block2.default;exports.Tx = _transaction2.default;exports.Type = _transaction.Type;exports.Input = _input2.default;exports.Output = _output2.default;exports.Outpoint = _outpoint2.default;exports.Util = _util2.default;
+
+
+
+
+
+
+
+    default;} });var _block = require('./block');Object.defineProperty(exports, 'Block', { enumerable: true, get: function get() {return _interopRequireDefault(_block).
+    default;} });var _transaction = require('./transaction');Object.defineProperty(exports, 'Tx', { enumerable: true, get: function get() {return _interopRequireDefault(_transaction).
+    default;} });Object.defineProperty(exports, 'Type', { enumerable: true, get: function get() {return _transaction.Type;} });var _input = require('./input');Object.defineProperty(exports, 'Input', { enumerable: true, get: function get() {return _interopRequireDefault(_input).
+    default;} });var _output = require('./output');Object.defineProperty(exports, 'Output', { enumerable: true, get: function get() {return _interopRequireDefault(_output).
+    default;} });var _outpoint = require('./outpoint');Object.defineProperty(exports, 'Outpoint', { enumerable: true, get: function get() {return _interopRequireDefault(_outpoint).
+    default;} });var _util = require('./util');Object.defineProperty(exports, 'Util', { enumerable: true, get: function get() {return _interopRequireDefault(_util).
+    default;} });var _helpers2 = require('./helpers');var _helpers = _interopRequireWildcard(_helpers2);function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}exports.
+
+helpers = _helpers;

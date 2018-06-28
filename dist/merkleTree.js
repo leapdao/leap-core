@@ -2,6 +2,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
 var _ethereumjsUtil = require('ethereumjs-util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 /* eslint-disable class-methods-use-this */var
@@ -124,7 +133,13 @@ MerkleTree = function () {
     } }]);return MerkleTree;}();
 
 
-/* eslint-enable class-methods-use-this */ // Adopted from: https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/test/helpers/merkleTree.js
+/* eslint-enable class-methods-use-this */ /**
+                                            * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                            *
+                                            * This source code is licensed under the GNU Affero General Public License,
+                                            * version 3, found in the LICENSE file in the root directory of this source 
+                                            * tree.
+                                            */ // Adopted from: https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/test/helpers/merkleTree.js
 // Changes:
 // - Removed sorting and deduplication
 // - Added padding to even number of elements

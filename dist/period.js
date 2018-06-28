@@ -1,11 +1,20 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');
-var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
 
-Period = function () {
-  function Period(prevHash, blocks) {var _this = this;(0, _classCallCheck3.default)(this, Period);
-    this.prevHash = prevHash;
-    this.blockList = [];
-    this.blockHashList = [];
+
+
+
+
+
+
+
+var _ethereumjsUtil = require('ethereumjs-util');
+var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} /**
+                                                                                                                                                                                                * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                *
+                                                                                                                                                                                                * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                * version 3, found in the LICENSE file in the root directory of this source 
+                                                                                                                                                                                                * tree.
+                                                                                                                                                                                                */var Period = function () {function Period(prevHash, blocks) {var _this = this;(0, _classCallCheck3.default)(this, Period);this.prevHash = prevHash;this.blockList = [];this.blockHashList = [];
     if (blocks) {
       blocks.forEach(function (block) {return _this.addBlock(block);});
     }

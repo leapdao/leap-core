@@ -147,4 +147,22 @@ declare module "parsec-lib" {
     public toRaw(): Buffer;
     public toJSON(): TxJSON;
   }
+
+  namespace helpers {
+    type Unspent = {
+      outpoint: Outpoint;
+      output: OutputJSON;
+    };
+
+    export function makeTransferTxFromUnspent(
+      unspent: Array<Unspent>,
+      from: string,
+      to: string,
+      amount: number,
+      privKey: string,
+      height: number
+    ): Tx<Type.TRANSFER>;
+
+    export function extendWeb3(web3Instance: any): any;
+  }
 }

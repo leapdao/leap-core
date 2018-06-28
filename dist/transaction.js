@@ -1,16 +1,25 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Type = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Type = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
+
+
+
+
+
+
+
+
+var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _fastEquals = require('fast-equals');
 
 var _input = require('./input');var _input2 = _interopRequireDefault(_input);
 var _output2 = require('./output');var _output3 = _interopRequireDefault(_output2);
 var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
-var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
-
-var EMPTY_BUF = Buffer.alloc(32, 0);
-
-var Type = exports.Type = {
-  COINBASE: 1,
-  DEPOSIT: 2,
+var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} /**
+                                                                                                                             * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                             *
+                                                                                                                             * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                             * version 3, found in the LICENSE file in the root directory of this source 
+                                                                                                                             * tree.
+                                                                                                                             */var EMPTY_BUF = Buffer.alloc(32, 0);var Type = exports.Type = { COINBASE: 1, DEPOSIT: 2,
   TRANSFER: 3,
   ACCOUNT_SIM: 4,
   COMP_REQ: 5,

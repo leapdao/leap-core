@@ -1,14 +1,23 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUT_LENGTH = undefined;var _typeof2 = require('babel-runtime/helpers/typeof');var _typeof3 = _interopRequireDefault(_typeof2);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUT_LENGTH = undefined;var _typeof2 = require('babel-runtime/helpers/typeof');var _typeof3 = _interopRequireDefault(_typeof2);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
+
+
+
+
+
+
+
+
+var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 // 8 bytes - value, 20 bytes - address
-var OUT_LENGTH = exports.OUT_LENGTH = 28;var
-
-Output = function () {
-
-  function Output(valueOrObject, address) {(0, _classCallCheck3.default)(this, Output);
-    if ((typeof valueOrObject === 'undefined' ? 'undefined' : (0, _typeof3.default)(valueOrObject)) === 'object') {
-      // transfer output
+/**
+ * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+ *
+ * This source code is licensed under the GNU Affero General Public License,
+ * version 3, found in the LICENSE file in the root directory of this source 
+ * tree.
+ */var OUT_LENGTH = exports.OUT_LENGTH = 28;var Output = function () {function Output(valueOrObject, address) {(0, _classCallCheck3.default)(this, Output);if ((typeof valueOrObject === 'undefined' ? 'undefined' : (0, _typeof3.default)(valueOrObject)) === 'object') {// transfer output
       if (valueOrObject.address) {
         this.value = valueOrObject.value;
         this.address = valueOrObject.address;

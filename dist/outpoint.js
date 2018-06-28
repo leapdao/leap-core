@@ -1,4 +1,13 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUTPOINT_LENGTH = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUTPOINT_LENGTH = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
+
+
+
+
+
+
+
+
+var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _encoding = require('./encoding');var _encoding2 = _interopRequireDefault(_encoding);
 var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
@@ -8,13 +17,13 @@ var OUTPOINT_LENGTH = exports.OUTPOINT_LENGTH = 33;
 
 /*
                                                      * Helpers
-                                                     */
-function strcmp(a, b) {
-  var len = Math.min(a.length, b.length);
-
-  for (var i = 0; i < len; i++) {
-    if (a[i] < b[i]) {return -1;}
-    if (a[i] > b[i]) {return 1;}
+                                                     */ /**
+                                                         * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                         *
+                                                         * This source code is licensed under the GNU Affero General Public License,
+                                                         * version 3, found in the LICENSE file in the root directory of this source 
+                                                         * tree.
+                                                         */function strcmp(a, b) {var len = Math.min(a.length, b.length);for (var i = 0; i < len; i++) {if (a[i] < b[i]) {return -1;}if (a[i] > b[i]) {return 1;}
   }
 
   if (a.length < b.length) {return -1;}
