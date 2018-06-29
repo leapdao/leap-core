@@ -139,7 +139,8 @@ declare module "parsec-lib" {
     public recoverTxSigner(): void;
     public sigHashBuf(): Buffer;
     public sigHash(): string;
-    public sign(privKeys): Tx<TxType>;
+    public sign(privKeys: string[]): Tx<TxType>;
+    public signAll(privKey: string): Tx<TxType>;
     public hashBuf(): Buffer;
     public hash(): string;
     public hex(): string;
@@ -154,14 +155,8 @@ declare module "parsec-lib" {
       output: OutputJSON;
     };
 
-    export function makeTransferTxFromUnspent(
-      unspent: Array<Unspent>,
-      from: string,
-      to: string,
-      amount: number,
-      privKey: string,
-      height: number
-    ): Tx<Type.TRANSFER>;
+    export function calcInputs(unspent: Array<Unspent>, amount: number): Array<Input>;
+    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number): Array<Output>;
 
     export function extendWeb3(web3Instance: any): any;
   }
