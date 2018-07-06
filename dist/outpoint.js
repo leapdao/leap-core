@@ -21,7 +21,7 @@ var OUTPOINT_LENGTH = exports.OUTPOINT_LENGTH = 33;
                                                          * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
                                                          *
                                                          * This source code is licensed under the GNU Affero General Public License,
-                                                         * version 3, found in the LICENSE file in the root directory of this source 
+                                                         * version 3, found in the LICENSE file in the root directory of this source
                                                          * tree.
                                                          */function strcmp(a, b) {var len = Math.min(a.length, b.length);for (var i = 0; i < len; i++) {if (a[i] < b[i]) {return -1;}if (a[i] > b[i]) {return 1;}
   }

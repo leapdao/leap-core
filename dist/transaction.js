@@ -11,7 +11,7 @@ var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interop
 var _fastEquals = require('fast-equals');
 
 var _input = require('./input');var _input2 = _interopRequireDefault(_input);
-var _output2 = require('./output');var _output3 = _interopRequireDefault(_output2);
+var _output = require('./output');var _output2 = _interopRequireDefault(_output);
 var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
 var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} /**
                                                                                                                              * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
@@ -19,8 +19,7 @@ var _util = require('./util');function _interopRequireDefault(obj) {return obj &
                                                                                                                              * This source code is licensed under the GNU Affero General Public License,
                                                                                                                              * version 3, found in the LICENSE file in the root directory of this source
                                                                                                                              * tree.
-                                                                                                                             */var EMPTY_BUF = Buffer.alloc(32, 0);var Type = exports.Type = { COINBASE: 1, DEPOSIT: 2,
-  TRANSFER: 3,
+                                                                                                                             */var EMPTY_BUF = Buffer.alloc(32, 0);var Type = exports.Type = { DEPOSIT: 2, TRANSFER: 3,
   ACCOUNT_SIM: 4,
   COMP_REQ: 5,
   COMP_RESP: 6,
@@ -64,25 +63,17 @@ Transaction = function () {
 
 
 
-
-
-
-
     /*
                                                               * Returns raw transaction size.
                                                               * See `toRaw` for details.
                                                               */value: function getSize()
     {
-      if (this.type === Type.COINBASE) {
-        return 29;
-      }
       if (this.type === Type.DEPOSIT) {
-        return 33;
+        return 35;
       }
       if (this.type === Type.TRANSFER) {
-        var size = 10 +
-        this.inputs.reduce(function (s, i) {return s += i.getSize();}) +
-        this.outputs.reduce(function (s, o) {return s += o.getSize();});
+        return 10 + this.inputs.reduce(function (s, i) {return s + i.getSize();}, 0) +
+        this.outputs.reduce(function (s, o) {return s + o.getSize();}, 0);
       }
 
       return this.toRaw().length;
@@ -258,13 +249,13 @@ Transaction = function () {
       }
 
       return json;
-    } }], [{ key: 'coinbase', value: function coinbase(value, address) {return new Transaction(Type.COINBASE, [], [new _output3.default(value, address)]);} }, { key: 'deposit', value: function deposit(depositId, value, address) {return new Transaction(Type.DEPOSIT, [], [new _output3.default(value, address)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(Type.EXIT, [input], []);} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {return new Transaction(Type.COMP_REQ, inputs, outputs);} }, { key: 'compResponse', value: function compResponse(inputs, outputs) {return new Transaction(Type.COMP_RESP, inputs, outputs);} }, { key: 'sigHashBufStatic', value: function sigHashBufStatic(type, raw, inputsLength) {var noSigs = Buffer.alloc(raw.length, 0);var offset = type === Type.TRANSFER ? 10 : 2; // copy type, height and lengths
+    } }], [{ key: 'deposit', value: function deposit(depositId, value, address, color) {return new Transaction(Type.DEPOSIT, [], [new _output2.default(value, address, color)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(Type.EXIT, [input], []);} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {return new Transaction(Type.COMP_REQ, inputs, outputs);} }, { key: 'compResponse', value: function compResponse(inputs, outputs) {return new Transaction(Type.COMP_RESP, inputs, outputs);} }, { key: 'sigHashBufStatic', value: function sigHashBufStatic(type, raw, inputsLength) {var noSigs = Buffer.alloc(raw.length, 0);var offset = type === Type.TRANSFER ? 10 : 2; // copy type, height and lengths
       raw.copy(noSigs, 0, 0, offset);for (var i = 0; i < inputsLength; i += 1) {raw.copy(noSigs, offset, offset, offset + 33);offset += type !== Type.TRANSFER && i === 0 ? 33 : 98;}raw.copy(noSigs, offset, offset, raw.length);return _ethereumjsUtil2.default.sha3(noSigs);} }, { key: 'fromJSON', value: function fromJSON(_ref)
     {var type = _ref.type,inputs = _ref.inputs,outputs = _ref.outputs,options = _ref.options;
       return new Transaction(
       type,
       inputs.map(_input2.default.fromJSON),
-      outputs.map(_output3.default.fromJSON),
+      outputs.map(_output2.default.fromJSON),
       options);
 
     } }, { key: 'parseToParams', value: function parseToParams(
@@ -287,20 +278,13 @@ Transaction = function () {
       var type = dataBuf.readUInt8(0);
 
       switch (type) {
-        case Type.COINBASE:{
-            if (dataBuf.length !== 29) {
-              throw new Error('malformed coinbase tx.');
-            }
-            var output = _output3.default.fromRaw(dataBuf.slice(1));
-            return new Transaction(Type.COINBASE, [], [output]);
-          }
         case Type.DEPOSIT:{
-            if (dataBuf.length !== 33) {
+            if (dataBuf.length !== 35) {
               throw new Error('malformed deposit tx.');
             }
             var depositId = dataBuf.readUInt32BE(1);
-            var _output = _output3.default.fromRaw(dataBuf.slice(5));
-            return new Transaction(Type.DEPOSIT, [], [_output], { depositId: depositId });
+            var output = _output2.default.fromRaw(dataBuf.slice(5));
+            return new Transaction(Type.DEPOSIT, [], [output], { depositId: depositId });
           }
         case Type.EXIT:{
             if (dataBuf.length !== 34) {
@@ -321,9 +305,9 @@ Transaction = function () {
             }
             var outs = [];
             for (var _i = 0; _i < outsLength; _i += 1) {
-              outs.push(_output3.default.fromRaw(
+              outs.push(_output2.default.fromRaw(
               dataBuf,
-              10 + insLength * _input.SPEND_INPUT_LENGTH + _i * _output2.OUT_LENGTH));
+              10 + insLength * _input.SPEND_INPUT_LENGTH + _i * _output.OUT_LENGTH));
 
             }
             return new Transaction(Type.TRANSFER, ins, outs, { height: height });
@@ -335,18 +319,21 @@ Transaction = function () {
             var _ins = [];
             _ins.push(_input2.default.fromRaw(dataBuf, 2));
             var _sigHashBuf = Transaction.sigHashBufStatic(type, dataBuf, _insLength);
+            // computation input size:
+            // tx-type 1b, input# output# 1b, outpoint 33b
             var offset = 35;
             for (var _i2 = 1; _i2 < _insLength; _i2 += 1) {
               _ins.push(_input2.default.fromRaw(dataBuf, offset, _sigHashBuf));
               offset += _input.SPEND_INPUT_LENGTH;
             }
             var _outs = [];
-            _outs.push(_output3.default.fromRaw(dataBuf, offset, 1));
-            // value 8 + gasPrice 4 + length 2 + length
-            offset += 14 + _outs[0].msgData.length;
+            _outs.push(_output2.default.fromRaw(dataBuf, offset, 1));
+            // computation output size:
+            // value 8 + color 2 + gasPrice 4 + length 2 + length
+            offset += 16 + _outs[0].msgData.length;
             for (var _i3 = 1; _i3 < _outsLength; _i3 += 1) {
-              _outs.push(_output3.default.fromRaw(dataBuf, offset));
-              offset += _output2.OUT_LENGTH;
+              _outs.push(_output2.default.fromRaw(dataBuf, offset));
+              offset += _output.OUT_LENGTH;
             }
             return new Transaction(Type.COMP_REQ, _ins, _outs);
           }
@@ -356,9 +343,9 @@ Transaction = function () {
             var _ins2 = [];
             _ins2.push(_input2.default.fromRaw(dataBuf, 2));
             var _outs2 = [];
-            _outs2.push(_output3.default.fromRaw(dataBuf, 35, 2));
+            _outs2.push(_output2.default.fromRaw(dataBuf, 35, 2));
             for (var _i4 = 1; _i4 < _outsLength2; _i4 += 1) {
-              _outs2.push(_output3.default.fromRaw(dataBuf, 95 + (_i4 - 1) * _output2.OUT_LENGTH));
+              _outs2.push(_output2.default.fromRaw(dataBuf, 95 + (_i4 - 1) * _output.OUT_LENGTH));
             }
             return new Transaction(Type.COMP_RESP, _ins2, _outs2);
           }

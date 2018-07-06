@@ -9,15 +9,16 @@
 
 var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
+var _fastEquals = require('fast-equals');
 var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);
 var _util = require('./util');
-var _transaction = require('./transaction');var _transaction2 = _interopRequireDefault(_transaction);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
-
-Block = function () {
-  function Block(height, options) {(0, _classCallCheck3.default)(this, Block);var _ref =
-    options || {},timestamp = _ref.timestamp,txs = _ref.txs;
-    this.height = height;
-    this.timestamp = timestamp;
+var _transaction = require('./transaction');var _transaction2 = _interopRequireDefault(_transaction);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} /**
+                                                                                                                                                                                                    * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                    *
+                                                                                                                                                                                                    * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                    * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                    * tree.
+                                                                                                                                                                                                    */var Block = function () {function Block(height, options) {(0, _classCallCheck3.default)(this, Block);var _ref = options || {},timestamp = _ref.timestamp,txs = _ref.txs;this.height = height;this.timestamp = timestamp;
     this.txList = txs || [];
     this.txHashList = this.txList.map(function (tx) {return tx.hash();});
     this.merkleTree = null;
@@ -64,15 +65,16 @@ Block = function () {
     } }, { key: 'equals', value: function equals(
 
     another) {
-      return deepEqual(this, another);
+      return (0, _fastEquals.deepEqual)(this, another);
     }
 
     /*
       * Returns raw block data size
       */ }, { key: 'getSize', value: function getSize()
     {
-      // 8 bytes height + 4 bytes timestamp + for each tx( X bytes raw tx size + 4 bytes raw tx length )
-      return 12 + this.txList.reduce(function (s, tx) {return s += tx.getSize() + 4;}, 0);
+      // 8 bytes height + 4 bytes timestamp
+      // + for each tx( X bytes raw tx size + 4 bytes raw tx length )
+      return 12 + this.txList.reduce(function (s, tx) {return s + tx.getSize() + 4;}, 0);
     } }, { key: 'toJSON', value: function toJSON()
 
     {
@@ -106,7 +108,8 @@ Block = function () {
       var payload = Buffer.alloc(this.getSize(), 0);
       (0, _util.writeUint64)(payload, this.height, 0);
       payload.writeUInt32BE(this.timestamp, 8);
-      var offset = 12,rawTx = void 0;
+      var offset = 12;
+      var rawTx = void 0;
       this.txList.forEach(function (tx) {
         rawTx = tx.toRaw();
         (0, _assert2.default)(rawTx.length <= Math.pow(2, 32));
@@ -121,6 +124,7 @@ Block = function () {
       * Creates block from raw serialized bytes
       * Also: `toRaw`
       */ }, { key: 'proof',
+
 
 
 
@@ -205,10 +209,4 @@ Block = function () {
 
       // Add slices with proofs and return
       return slices.concat(proofs);
-    } }], [{ key: 'fromJSON', value: function fromJSON(_ref2) {var height = _ref2.height,timestamp = _ref2.timestamp,txs = _ref2.txs;return new Block(height, { timestamp: timestamp, txs: txs.map(_transaction2.default.fromJSON) });} }, { key: 'fromRaw', value: function fromRaw(buf) {var height = (0, _util.readUint64)(buf);var timestamp = buf.readUInt32BE(8);var block = new Block(height, { timestamp: timestamp });var offset = 12,txSize = void 0;while (offset < buf.length) {txSize = buf.readUInt32BE(offset);block.addTx(_transaction2.default.fromRaw(buf.slice(offset + 4, offset + 4 + txSize)));offset += txSize + 4;}return block;} }]);return Block;}(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * This source code is licensed under the GNU Affero General Public License,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * version 3, found in the LICENSE file in the root directory of this source 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * tree.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */exports.default = Block;module.exports = exports['default'];
+    } }], [{ key: 'fromJSON', value: function fromJSON(_ref2) {var height = _ref2.height,timestamp = _ref2.timestamp,txs = _ref2.txs;return new Block(height, { timestamp: timestamp, txs: txs.map(_transaction2.default.fromJSON) });} }, { key: 'fromRaw', value: function fromRaw(buf) {var height = (0, _util.readUint64)(buf);var timestamp = buf.readUInt32BE(8);var block = new Block(height, { timestamp: timestamp });var offset = 12;var txSize = void 0;while (offset < buf.length) {txSize = buf.readUInt32BE(offset);block.addTx(_transaction2.default.fromRaw(buf.slice(offset + 4, offset + 4 + txSize)));offset += txSize + 4;}return block;} }]);return Block;}();exports.default = Block;module.exports = exports['default'];
