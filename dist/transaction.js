@@ -72,7 +72,7 @@ Transaction = function () {
         return 35;
       }
       if (this.type === Type.TRANSFER) {
-        return 10 + this.inputs.reduce(function (s, i) {return s + i.getSize();}, 0) +
+        return 2 + this.inputs.reduce(function (s, i) {return s + i.getSize();}, 0) +
         this.outputs.reduce(function (s, o) {return s + o.getSize();}, 0);
       }
 
@@ -165,25 +165,19 @@ Transaction = function () {
       *
       * Serialized this tx in bytes as follows:
       *
-      * Coinbase (29 bytes):
-      *
-      * 0 -   1 byte type
-      * 1 -   8 bytes value
-      * 9 -  20 bytes address
-      * 29
       *
       * Deposit (33 bytes):
       *
       * 0 -   1 byte type
       * 1 -   4 bytes depositId
       * 5 -   8 bytes value
-      * 13 -  20 bytes address
-      * 33
+      * 13 -  2 bytes color
+      * 15 - 20 bytes address
+      * 35
       *
       * Transfer (262 bytes):
       *
       * 0 -   1 byte type
-      * 1 -   8 bytes height
       * 9 -   4 bits number of inputs
       * 9 -   4 bits number of outputs
       * 10 -  32 bytes prev tx          $
@@ -197,10 +191,12 @@ Transaction = function () {
       * 173 - 32 bytes s-signature        #    second signature
       * 205 - 1 byte v-signature          #
       * 206 - 8 bytes value             $
-      * 214 - 20 bytes address          $      first output
-      * 234 - 8 bytes value               #
-      * 242 - 20 bytes address            #    second output
-      * 262
+      * 214 - 2 bytes color
+      * 216 - 20 bytes address          $      first output
+      * 236 - 8 bytes value               #
+      * 244 - 2 bytes color
+      * 246 - 20 bytes address            #    second output
+      * 266
       *
       * */ }, { key: 'toRaw', value: function toRaw()
     {
@@ -215,11 +211,10 @@ Transaction = function () {
         payload.writeUInt8(this.type, 0);
         (0, _util.arrayToRaw)(this.inputs).copy(payload, 1, 0, 33);
       } else if (this.type === Type.TRANSFER) {
-        payload = Buffer.alloc(10, 0);
+        payload = Buffer.alloc(2, 0);
         payload.writeUInt8(this.type, 0);
-        (0, _util.writeUint64)(payload, this.options.height, 1);
         // write ins and outs length as nibbles
-        payload.writeUInt8(16 * this.inputs.length + this.outputs.length, 9);
+        payload.writeUInt8(16 * this.inputs.length + this.outputs.length, 1);
         inputs = this.inputs;
       } else if (this.type === Type.COMP_REQ || this.type === Type.COMP_RESP) {
         payload = Buffer.alloc(2, 0);
@@ -249,7 +244,7 @@ Transaction = function () {
       }
 
       return json;
-    } }], [{ key: 'deposit', value: function deposit(depositId, value, address, color) {return new Transaction(Type.DEPOSIT, [], [new _output2.default(value, address, color)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(Type.EXIT, [input], []);} }, { key: 'transfer', value: function transfer(height, inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs, { height: height });} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {return new Transaction(Type.COMP_REQ, inputs, outputs);} }, { key: 'compResponse', value: function compResponse(inputs, outputs) {return new Transaction(Type.COMP_RESP, inputs, outputs);} }, { key: 'sigHashBufStatic', value: function sigHashBufStatic(type, raw, inputsLength) {var noSigs = Buffer.alloc(raw.length, 0);var offset = type === Type.TRANSFER ? 10 : 2; // copy type, height and lengths
+    } }], [{ key: 'deposit', value: function deposit(depositId, value, address, color) {return new Transaction(Type.DEPOSIT, [], [new _output2.default(value, address, color)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(Type.EXIT, [input], []);} }, { key: 'transfer', value: function transfer(inputs, outputs) {return new Transaction(Type.TRANSFER, inputs, outputs);} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {return new Transaction(Type.COMP_REQ, inputs, outputs);} }, { key: 'compResponse', value: function compResponse(inputs, outputs) {return new Transaction(Type.COMP_RESP, inputs, outputs);} }, { key: 'sigHashBufStatic', value: function sigHashBufStatic(type, raw, inputsLength) {var noSigs = Buffer.alloc(raw.length, 0);var offset = 2; // copy type, height and lengths
       raw.copy(noSigs, 0, 0, offset);for (var i = 0; i < inputsLength; i += 1) {raw.copy(noSigs, offset, offset, offset + 33);offset += type !== Type.TRANSFER && i === 0 ? 33 : 98;}raw.copy(noSigs, offset, offset, raw.length);return _ethereumjsUtil2.default.sha3(noSigs);} }, { key: 'fromJSON', value: function fromJSON(_ref)
     {var type = _ref.type,inputs = _ref.inputs,outputs = _ref.outputs,options = _ref.options;
       return new Transaction(
@@ -294,23 +289,22 @@ Transaction = function () {
             return new Transaction(Type.EXIT, [new _input2.default(outpoint)], []);
           }
         case Type.TRANSFER:{
-            var height = (0, _util.readUint64)(dataBuf, 1);
-            var insOuts = dataBuf.readUInt8(9);
+            var insOuts = dataBuf.readUInt8(1);
             var insLength = insOuts >> 4; // eslint-disable-line no-bitwise
             var outsLength = insOuts & 0xF; // eslint-disable-line no-bitwise
             var ins = [];
             var sigHashBuf = Transaction.sigHashBufStatic(type, dataBuf, insLength);
             for (var i = 0; i < insLength; i += 1) {
-              ins.push(_input2.default.fromRaw(dataBuf, 10 + i * _input.SPEND_INPUT_LENGTH, sigHashBuf));
+              ins.push(_input2.default.fromRaw(dataBuf, 2 + i * _input.SPEND_INPUT_LENGTH, sigHashBuf));
             }
             var outs = [];
             for (var _i = 0; _i < outsLength; _i += 1) {
               outs.push(_output2.default.fromRaw(
               dataBuf,
-              10 + insLength * _input.SPEND_INPUT_LENGTH + _i * _output.OUT_LENGTH));
+              2 + insLength * _input.SPEND_INPUT_LENGTH + _i * _output.OUT_LENGTH));
 
             }
-            return new Transaction(Type.TRANSFER, ins, outs, { height: height });
+            return new Transaction(Type.TRANSFER, ins, outs);
           }
         case Type.COMP_REQ:{
             var _insOuts = dataBuf.readUInt8(1);

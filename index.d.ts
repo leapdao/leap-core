@@ -68,11 +68,9 @@ declare module "parsec-lib" {
     public prevout?: Outpoint;
     public depositId?: number;
     public contractAddr?: string;
-    public coinbase?: boolean;
     public signer?: string;
 
     public setSigner(signer: string): void;
-    public isCoinbase(): boolean;
     public isComputation(): boolean;
     public isDeposit(): boolean;
     public isSpend(): boolean;
@@ -89,7 +87,6 @@ declare module "parsec-lib" {
   }
 
   export enum Type {
-    COINBASE = 1,
     DEPOSIT = 2,
     TRANSFER = 3,
     ACCOUNT_SIM = 4,
@@ -100,7 +97,6 @@ declare module "parsec-lib" {
 
   type TxOptions = {
     depositId?: number;
-    height?: number;
   };
 
   type TxJSON = {
@@ -117,11 +113,9 @@ declare module "parsec-lib" {
     public outputs: Array<Output>;
     public options?: TxOptions;
 
-    public static coinbase(value: number, address: string): Tx<Type.COINBASE>;
-
     public static deposit(depositId, value, address): Tx<Type.DEPOSIT>;
     public static exit(input: Input): Tx<Type.EXIT>;
-    public static transfer(height: number, inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
+    public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
     public static compRequest(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.COMP_REQ>;
     public static compResponse(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.COMP_RESP>;
 
