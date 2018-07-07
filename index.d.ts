@@ -89,7 +89,7 @@ declare module "parsec-lib" {
   export enum Type {
     DEPOSIT = 2,
     TRANSFER = 3,
-    ACCOUNT_SIM = 4,
+    CONSOLIDATE = 4,
     COMP_REQ = 5,
     COMP_RESP = 6,
     EXIT = 7,
@@ -116,6 +116,7 @@ declare module "parsec-lib" {
     public static deposit(depositId, value, address): Tx<Type.DEPOSIT>;
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
+    public static consolidate(inputs: Array<Input>, output: Output): Tx<Type.CONSOLIDATE>;
     public static compRequest(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.COMP_REQ>;
     public static compResponse(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.COMP_RESP>;
 
