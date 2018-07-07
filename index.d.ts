@@ -8,13 +8,15 @@ declare module "parsec-lib" {
   export type OutputJSON = {
     value: number;
     address: string;
+    color: number;
     storageRoot?: string;
   };
 
   export class Output {
-    constructor(valueOrObject: number | TransferOutputObject, address?: string);
+    constructor(valueOrObject: number | TransferOutputObject, address?: string, color?: number);
     public value: number;
     public address: string;
+    public color: number;
     public storageRoot?: string;
 
     public getSize(): number;
