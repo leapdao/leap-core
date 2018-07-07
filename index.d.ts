@@ -8,13 +8,15 @@ declare module "parsec-lib" {
   export type OutputJSON = {
     value: number;
     address: string;
+    color: number;
     storageRoot?: string;
   };
 
   export class Output {
-    constructor(valueOrObject: number | TransferOutputObject, address?: string);
+    constructor(valueOrObject: number | TransferOutputObject, address?: string, color?: number);
     public value: number;
     public address: string;
+    public color: number;
     public storageRoot?: string;
 
     public getSize(): number;
@@ -64,14 +66,15 @@ declare module "parsec-lib" {
   export type InputJSON = DepositJSON | SpentJSON;
 
   export class Input {
-    constructor(options: Outpoint | number | { contractAddr: string; prevout: Outpoint });
+    constructor(options: Outpoint | number | { prevout: Outpoint, type: Type });
     public prevout?: Outpoint;
+    public type?: Type;
     public depositId?: number;
-    public contractAddr?: string;
     public signer?: string;
 
     public setSigner(signer: string): void;
     public isComputation(): boolean;
+    public isConsolidation(): boolean;
     public isDeposit(): boolean;
     public isSpend(): boolean;
     public getSize(): number;
@@ -113,7 +116,7 @@ declare module "parsec-lib" {
     public outputs: Array<Output>;
     public options?: TxOptions;
 
-    public static deposit(depositId, value, address): Tx<Type.DEPOSIT>;
+    public static deposit(depositId: number, value: number, address: string, color: number): Tx<Type.DEPOSIT>;
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
     public static consolidate(inputs: Array<Input>, output: Output): Tx<Type.CONSOLIDATE>;
@@ -150,8 +153,8 @@ declare module "parsec-lib" {
       output: OutputJSON;
     };
 
-    export function calcInputs(unspent: Array<Unspent>, amount: number): Array<Input>;
-    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number): Array<Output>;
+    export function calcInputs(unspent: Array<Unspent>, from: string, amount: number, color: number): Array<Input>;
+    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number, color): Array<Output>;
 
     export function extendWeb3(web3Instance: any): any;
   }

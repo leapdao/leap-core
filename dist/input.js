@@ -10,36 +10,34 @@
 var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
-var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _util = require('./util');var _util2 = _interopRequireDefault(_util);
+var _type = require('./type');var _type2 = _interopRequireDefault(_type);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 // outpoint(32 bytes prev tx + 1 byte output pos) + 65 bytes signature
-/**
- * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
- *
- * This source code is licensed under the GNU Affero General Public License,
- * version 3, found in the LICENSE file in the root directory of this source
- * tree.
- */var SPEND_INPUT_LENGTH = exports.SPEND_INPUT_LENGTH = 33 + 65;var Input = function () {function Input(options) {(0, _classCallCheck3.default)(this, Input);if (_outpoint2.default.isOutpoint(options)) {this.prevout = options;} else if (_util2.default.isU32(options)) {
+var SPEND_INPUT_LENGTH = exports.SPEND_INPUT_LENGTH = 33 + 65; /**
+                                                                * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                *
+                                                                * This source code is licensed under the GNU Affero General Public License,
+                                                                * version 3, found in the LICENSE file in the root directory of this source
+                                                                * tree.
+                                                                */var Input = function () {function Input(options) {(0, _classCallCheck3.default)(this, Input);if (_outpoint2.default.isOutpoint(options)) {this.prevout = options;} else if (_util2.default.isU32(options)) {
       this.depositId = options;
-    } else if (options && options.contractAddr) {
-      this.contractAddr = options.contractAddr;
+    } else if (options && options.prevout) {
+      this.type = options.type;
       this.prevout = options.prevout;
-    } else {
-      (0, _assert2.default)(!options, 'Coinbase input should have no data.');
-      this.coinbase = true;
     }
   }(0, _createClass3.default)(Input, [{ key: 'setSigner', value: function setSigner(
 
     signer) {
       this.signer = signer;
-    } }, { key: 'isCoinbase', value: function isCoinbase()
-
-    {
-      return this.coinbase;
     } }, { key: 'isComputation', value: function isComputation()
 
     {
-      return this.contractAddr;
+      return this.type === _type2.default.COMP_REQ || this.type === _type2.default.COMP_RESP;
+    } }, { key: 'isConsolidation', value: function isConsolidation()
+
+    {
+      return this.type === _type2.default.CONSOLIDATE;
     } }, { key: 'isDeposit', value: function isDeposit()
 
     {
@@ -59,7 +57,7 @@ var _util = require('./util');var _util2 = _interopRequireDefault(_util);functio
       if (this.isDeposit()) {
         return 4;
       }
-      if (this.isComputation()) {
+      if (this.isComputation() || this.isConsolidation()) {
         return 33;
       }
       if (this.isSpend()) {
@@ -96,7 +94,7 @@ var _util = require('./util');var _util2 = _interopRequireDefault(_util);functio
           depositId: this.depositId };
 
       }
-      if (this.isComputation()) {
+      if (this.isComputation() || this.isConsolidation()) {
         var input = (0, _extends3.default)({}, this.prevout); // toJSON shouldn't mutate existing objects
         input.hash = _ethereumjsUtil2.default.bufferToHex(input.hash);
         return input;
@@ -169,15 +167,17 @@ var _util = require('./util');var _util2 = _interopRequireDefault(_util);functio
       var off = offset || 0;
       var prevout = new _outpoint2.default(buf.slice(0 + off, 32 + off), buf.readUInt8(32 + off));
       var input = void 0;
-      if (sigHashBuf) {
+      if (sigHashBuf === _type2.default.CONSOLIDATE ||
+      sigHashBuf === _type2.default.COMP_RESP || sigHashBuf === _type2.default.COMP_REQ) {
+        // nothing
+        input = new Input({ prevout: prevout, type: sigHashBuf });
+      } else if (sigHashBuf) {
         input = new Input(prevout);
         var r = buf.slice(33 + off, 65 + off);
         var s = buf.slice(65 + off, 97 + off);
         var v = buf.readUInt8(97 + off);
         var signer = Input.recoverSignerAddress(sigHashBuf, v, r, s);
         input.setSig(r, s, v, signer);
-      } else {
-        input = new Input({ prevout: prevout, contractAddr: '0x00' });
       }
       return input;
     }
