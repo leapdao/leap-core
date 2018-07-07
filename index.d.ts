@@ -114,7 +114,7 @@ declare module "parsec-lib" {
     public outputs: Array<Output>;
     public options?: TxOptions;
 
-    public static deposit(depositId, value, address): Tx<Type.DEPOSIT>;
+    public static deposit(depositId: number, value: number, address: string, color: number): Tx<Type.DEPOSIT>;
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
     public static consolidate(inputs: Array<Input>, output: Output): Tx<Type.CONSOLIDATE>;
