@@ -153,8 +153,8 @@ declare module "parsec-lib" {
       output: OutputJSON;
     };
 
-    export function calcInputs(unspent: Array<Unspent>, amount: number): Array<Input>;
-    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number): Array<Output>;
+    export function calcInputs(unspent: Array<Unspent>, from: string, amount: number, color: number): Array<Input>;
+    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number, color): Array<Output>;
 
     export function extendWeb3(web3Instance: any): any;
   }
