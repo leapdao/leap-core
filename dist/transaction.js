@@ -173,14 +173,15 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
       * Serialized this tx in bytes as follows:
       *
       *
-      * Deposit (33 bytes):
+      * Deposit (36 bytes):
       *
       * 0 -   1 byte type
-      * 1 -   4 bytes depositId
-      * 5 -   8 bytes value
-      * 13 -  2 bytes color
-      * 15 - 20 bytes address
-      * 35
+      * 1 -   1 byte inputs and outputs
+      * 2 -   4 bytes depositId
+      * 6 -   8 bytes value
+      * 14 -  2 bytes color
+      * 16 - 20 bytes address
+      * 36
       *
       * Transfer (262 bytes):
       *
@@ -228,7 +229,7 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
       if (this.type === _type2.default.DEPOSIT) {
         payload = Buffer.alloc(6, 0);
         payload.writeUInt8(this.type, 0);
-        payload.writeUInt8(1, 1); // 0 inputs, 1 output
+        payload.writeUInt8(16 + 1, 1); // 1 inputs, 1 output
         payload.writeUInt32BE(this.options.depositId, 2);
       } else if (this.type === _type2.default.EXIT) {
         payload = Buffer.alloc(34, 0);
