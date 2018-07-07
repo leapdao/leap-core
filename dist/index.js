@@ -9,7 +9,8 @@
 
     default;} });var _block = require('./block');Object.defineProperty(exports, 'Block', { enumerable: true, get: function get() {return _interopRequireDefault(_block).
     default;} });var _transaction = require('./transaction');Object.defineProperty(exports, 'Tx', { enumerable: true, get: function get() {return _interopRequireDefault(_transaction).
-    default;} });Object.defineProperty(exports, 'Type', { enumerable: true, get: function get() {return _transaction.Type;} });var _input = require('./input');Object.defineProperty(exports, 'Input', { enumerable: true, get: function get() {return _interopRequireDefault(_input).
+    default;} });var _type = require('./type');Object.defineProperty(exports, 'Type', { enumerable: true, get: function get() {return _interopRequireDefault(_type).
+    default;} });var _input = require('./input');Object.defineProperty(exports, 'Input', { enumerable: true, get: function get() {return _interopRequireDefault(_input).
     default;} });var _output = require('./output');Object.defineProperty(exports, 'Output', { enumerable: true, get: function get() {return _interopRequireDefault(_output).
     default;} });var _outpoint = require('./outpoint');Object.defineProperty(exports, 'Outpoint', { enumerable: true, get: function get() {return _interopRequireDefault(_outpoint).
     default;} });var _util = require('./util');Object.defineProperty(exports, 'Util', { enumerable: true, get: function get() {return _interopRequireDefault(_util).

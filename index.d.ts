@@ -64,14 +64,15 @@ declare module "parsec-lib" {
   export type InputJSON = DepositJSON | SpentJSON;
 
   export class Input {
-    constructor(options: Outpoint | number | { contractAddr: string; prevout: Outpoint });
+    constructor(options: Outpoint | number | { prevout: Outpoint, type: Type });
     public prevout?: Outpoint;
+    public type?: Type;
     public depositId?: number;
-    public contractAddr?: string;
     public signer?: string;
 
     public setSigner(signer: string): void;
     public isComputation(): boolean;
+    public isConsolidation(): boolean;
     public isDeposit(): boolean;
     public isSpend(): boolean;
     public getSize(): number;
