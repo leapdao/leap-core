@@ -17,26 +17,25 @@ var _util = require('./util');function _interopRequireDefault(obj) {return obj &
  * This source code is licensed under the GNU Affero General Public License,
  * version 3, found in the LICENSE file in the root directory of this source
  * tree.
- */var OUT_LENGTH = exports.OUT_LENGTH = 30;var Output = function () {function Output(valueOrObject, address, color) {(0, _classCallCheck3.default)(this, Output);if ((typeof valueOrObject === 'undefined' ? 'undefined' : (0, _typeof3.default)(valueOrObject)) === 'object') {// transfer output
-      if (valueOrObject.address) {
+ */var OUT_LENGTH = exports.OUT_LENGTH = 30;var Output = function () {function Output(valueOrObject, address, color) {(0, _classCallCheck3.default)(this, Output);if ((typeof valueOrObject === 'undefined' ? 'undefined' : (0, _typeof3.default)(valueOrObject)) === 'object') {if (valueOrObject.address) {
         this.value = valueOrObject.value;
         this.color = valueOrObject.color;
         this.address = valueOrObject.address;
-        if (valueOrObject.storageRoot) {
+
+        if (valueOrObject.storageRoot) {// computation response output
           this.storageRoot = valueOrObject.storageRoot;
         }
-      } else {// computation request output
-        this.value = valueOrObject.value;
-        this.color = valueOrObject.color;
-        this.gasPrice = valueOrObject.gasPrice;
-        // msgData is already buffer
-        if (Buffer.isBuffer(valueOrObject.msgData)) {
-          this.msgData = valueOrObject.msgData;
-        } else {// msgData is yet string
-          var dataHex = valueOrObject.msgData.replace('0x', '');
-          var dataBuf = Buffer.alloc(dataHex.length / 2);
-          dataBuf.write(dataHex, 'hex');
-          this.msgData = dataBuf;
+
+        if (valueOrObject.msgData) {// computation request output
+          this.gasPrice = valueOrObject.gasPrice;
+          if (Buffer.isBuffer(valueOrObject.msgData)) {// msgData is already buffer
+            this.msgData = valueOrObject.msgData;
+          } else {// msgData is yet string
+            var dataHex = valueOrObject.msgData.replace('0x', '');
+            var dataBuf = Buffer.alloc(dataHex.length / 2);
+            dataBuf.write(dataHex, 'hex');
+            this.msgData = dataBuf;
+          }
         }
       }
     } else {
