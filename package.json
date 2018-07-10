@@ -10,6 +10,7 @@
   ],
   "files": [
     "dist",
+    "index.d.ts",
     "README.md"
   ],
   "scripts": {
@@ -20,7 +21,8 @@
     "test": "mocha lib/*.spec.js --compilers js:babel-register",
     "cover": "nyc --reporter=lcov npm t",
     "prebuild": "rm -rf dist",
-    "build": "babel --out-dir dist --ignore *.spec.js lib"
+    "build": "babel --out-dir dist --ignore *.spec.js lib",
+    "prepublish": "npm run prebuild && npm run build"
   },
   "config": {
     "ghooks": {
