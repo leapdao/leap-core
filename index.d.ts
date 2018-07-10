@@ -1,4 +1,16 @@
 declare module "parsec-lib" {
+  export enum Type {
+    DEPOSIT = 2,
+    TRANSFER = 3,
+    CONSOLIDATE = 4,
+    COMP_REQ = 5,
+    COMP_RESP = 6,
+    EXIT = 7,
+    VALIDATOR_JOIN = 8,
+    VALIDATOR_LOGOUT = 9,
+    VALIDATOR_LEAVE = 10,
+  }
+
   type TransferOutputObject = {
     value: number;
     address: string;
@@ -89,17 +101,11 @@ declare module "parsec-lib" {
     public static recoverSignerAddress(sigHashBuf: Buffer, v: number, r: Buffer, s: Buffer): string;
   }
 
-  export enum Type {
-    DEPOSIT = 2,
-    TRANSFER = 3,
-    CONSOLIDATE = 4,
-    COMP_REQ = 5,
-    COMP_RESP = 6,
-    EXIT = 7,
-  }
-
   type TxOptions = {
     depositId?: number;
+    slotId?: number;
+    tenderKey?: string;
+    activationEpoch?: number;
   };
 
   type TxJSON = {
@@ -116,6 +122,9 @@ declare module "parsec-lib" {
     public outputs: Array<Output>;
     public options?: TxOptions;
 
+    public static validatorJoin(slotId: number, tenderKey: string, eventsCount: number): Tx<Type.VALIDATOR_JOIN>;
+    public static validatorLogout(slotId: number, tenderKey: string, eventsCount: number, activationEpoch: number): Tx<Type.VALIDATOR_LOGOUT>;
+    public static validatorLeave(slotId: number, tenderKey: string, eventsCount: number): Tx<Type.VALIDATOR_LEAVE>;
     public static deposit(depositId: number, value: number, address: string, color: number): Tx<Type.DEPOSIT>;
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
