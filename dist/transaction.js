@@ -64,6 +64,46 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*
                                                               * Returns raw transaction size.
                                                               * See `toRaw` for details.
@@ -231,6 +271,21 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
         payload.writeUInt8(this.type, 0);
         payload.writeUInt8(16 + 1, 1); // 1 inputs, 1 output
         payload.writeUInt32BE(this.options.depositId, 2);
+      } else if (this.type === _type2.default.VALIDATOR_JOIN || this.type === _type2.default.VALIDATOR_LEAVE) {
+        payload = Buffer.alloc(40, 0);
+        payload.writeUInt8(this.type, 0);
+        payload.writeUInt8(0, 1); // 0 inputs, 0 output
+        payload.writeUInt16BE(this.options.slotId, 2);
+        payload.write(this.options.tenderKey.replace('0x', ''), 4, 'hex');
+        payload.writeUInt32BE(this.options.eventsCount, 36);
+      } else if (this.type === _type2.default.VALIDATOR_LOGOUT) {
+        payload = Buffer.alloc(44, 0);
+        payload.writeUInt8(this.type, 0);
+        payload.writeUInt8(0, 1); // 0 inputs, 0 output
+        payload.writeUInt16BE(this.options.slotId, 2);
+        payload.write(this.options.tenderKey.replace('0x', ''), 4, 'hex');
+        payload.writeUInt32BE(this.options.eventsCount, 36);
+        payload.writeUInt32BE(this.options.activationEpoch, 40);
       } else if (this.type === _type2.default.EXIT) {
         payload = Buffer.alloc(34, 0);
         payload.writeUInt8(this.type, 0);
@@ -275,11 +330,11 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
       }
 
       return json;
-    } }], [{ key: 'deposit', value: function deposit(depositId, value, address, color) {return new Transaction(_type2.default.DEPOSIT, [], [new _output2.default(value, address, color)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(_type2.default.EXIT, [input]);} }, { key: 'transfer', value: function transfer(inputs, outputs) {return new Transaction(_type2.default.TRANSFER, inputs, outputs);} }, { key: 'consolidate', value: function consolidate(inputs, output) {inputs.forEach(function (input) {input.type = _type2.default.CONSOLIDATE;});return new Transaction(_type2.default.CONSOLIDATE, inputs, [output]);} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {inputs[0].type = _type2.default.COMP_REQ; // eslint-disable-line no-param-reassign
+    } }], [{ key: 'validatorJoin', value: function validatorJoin(slotId, tenderKey, eventsCount) {return new Transaction(_type2.default.VALIDATOR_JOIN, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase() });} }, { key: 'validatorLogout', value: function validatorLogout(slotId, tenderKey, eventsCount, activationEpoch) {return new Transaction(_type2.default.VALIDATOR_LOGOUT, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase(), activationEpoch: activationEpoch });} }, { key: 'validatorLeave', value: function validatorLeave(slotId, tenderKey, eventsCount) {return new Transaction(_type2.default.VALIDATOR_LEAVE, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase() });} }, { key: 'deposit', value: function deposit(depositId, value, address, color) {return new Transaction(_type2.default.DEPOSIT, [], [new _output2.default(value, address, color)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(_type2.default.EXIT, [input]);} }, { key: 'transfer', value: function transfer(inputs, outputs) {return new Transaction(_type2.default.TRANSFER, inputs, outputs);} }, { key: 'consolidate', value: function consolidate(inputs, output) {inputs.forEach(function (input) {input.type = _type2.default.CONSOLIDATE; // eslint-disable-line
+      });return new Transaction(_type2.default.CONSOLIDATE, inputs, [output]);} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {inputs[0].type = _type2.default.COMP_REQ; // eslint-disable-line no-param-reassign
       return new Transaction(_type2.default.COMP_REQ, inputs, outputs);} }, { key: 'compResponse', value: function compResponse(inputs, outputs) {inputs[0].type = _type2.default.COMP_RESP; // eslint-disable-line no-param-reassign
       return new Transaction(_type2.default.COMP_RESP, inputs, outputs);} }, { key: 'sigHashBufStatic', value: function sigHashBufStatic(type, raw, inputsLength) {var noSigs = Buffer.alloc(raw.length, 0);var offset = 2; // copy type, height and lengths
-      raw.copy(noSigs, 0, 0, offset);for (var i = 0; i < inputsLength; i += 1) {raw.copy(noSigs, offset, offset, offset + 33);offset += type !== _type2.default.TRANSFER && type !== _type2.default.CONSOLIDATE && i === 0 ? 33 : 98;}raw.copy(noSigs, offset, offset, raw.length);return _ethereumjsUtil2.default.sha3(noSigs);} }, { key: 'fromJSON', value: function fromJSON(_ref) {var type = _ref.type,inputs = _ref.inputs,outputs = _ref.outputs,options = _ref.options;return new Transaction(
-      type,
+      raw.copy(noSigs, 0, 0, offset);for (var i = 0; i < inputsLength; i += 1) {raw.copy(noSigs, offset, offset, offset + 33);offset += type !== _type2.default.TRANSFER && type !== _type2.default.CONSOLIDATE && i === 0 ? 33 : 98;}raw.copy(noSigs, offset, offset, raw.length);return _ethereumjsUtil2.default.sha3(noSigs);} }, { key: 'fromJSON', value: function fromJSON(_ref) {var type = _ref.type,inputs = _ref.inputs,outputs = _ref.outputs,options = _ref.options;return new Transaction(type,
       inputs.map(_input2.default.fromJSON),
       outputs.map(_output2.default.fromJSON),
       options);
@@ -311,6 +366,27 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
             var depositId = dataBuf.readUInt32BE(2);
             var output = _output2.default.fromRaw(dataBuf.slice(6));
             return new Transaction(_type2.default.DEPOSIT, [], [output], { depositId: depositId });
+          }
+        case _type2.default.VALIDATOR_JOIN:
+        case _type2.default.VALIDATOR_LEAVE:{
+            var txFunction = type === _type2.default.VALIDATOR_JOIN ? 'validatorJoin' : 'validatorLeave';
+            if (dataBuf.length !== 40) {
+              throw new Error('malformed ' + txFunction + ' tx.');
+            }
+            var slotId = dataBuf.readUInt16BE(2);
+            var tenderKey = '0x' + dataBuf.slice(4, 36).toString('hex');
+            var eventsCount = dataBuf.readUInt32BE(36);
+            return Transaction[txFunction](slotId, tenderKey, eventsCount);
+          }
+        case _type2.default.VALIDATOR_LOGOUT:{
+            if (dataBuf.length !== 44) {
+              throw new Error('malformed validatorLogout tx.');
+            }
+            var _slotId = dataBuf.readUInt16BE(2);
+            var _tenderKey = '0x' + dataBuf.slice(4, 36).toString('hex');
+            var _eventsCount = dataBuf.readUInt32BE(36);
+            var activationEpoch = dataBuf.readUInt32BE(40);
+            return Transaction.validatorLogout(_slotId, _tenderKey, _eventsCount, activationEpoch);
           }
         case _type2.default.EXIT:{
             if (dataBuf.length !== 34) {
@@ -366,8 +442,8 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
             var _outs2 = [];
             _outs2.push(_output2.default.fromRaw(dataBuf, offset, 1));
             // computation output size:
-            // value 8 + color 2 + gasPrice 4 + length 2 + length
-            offset += 16 + _outs2[0].msgData.length;
+            // value 8 + color 2 + address 20 + gasPrice 4 + length 2 + length
+            offset += 36 + _outs2[0].msgData.length;
             for (var _i4 = 1; _i4 < _outsLength; _i4 += 1) {
               _outs2.push(_output2.default.fromRaw(dataBuf, offset));
               offset += _output.OUT_LENGTH;

@@ -47,38 +47,32 @@ var _util = require('./util');function _interopRequireDefault(obj) {return obj &
 
   /* eslint-disable class-methods-use-this */(0, _createClass3.default)(Output, [{ key: 'getSize', value: function getSize()
     {
-      // transfer output
-      if (this.address) {
-        if (this.storageRoot) {
-          return OUT_LENGTH + 32;
-        }
-        return OUT_LENGTH;
+      if (this.storageRoot) {
+        return OUT_LENGTH + 32;
       }
       // computation request output
-      return OUT_LENGTH - 14 + this.msgData.length;
+      if (this.msgData) {
+        return OUT_LENGTH + 6 + this.msgData.length;
+      }
+      // transfer output
+      return OUT_LENGTH;
     }
     /* eslint-enable class-methods-use-this */ }, { key: 'toJSON', value: function toJSON()
 
     {
-      // transfer output
-      if (this.address) {
-        var rsp = {
-          address: this.address,
-          value: this.value,
-          color: this.color };
-
-        if (this.storageRoot) {
-          rsp.storageRoot = this.storageRoot;
-        }
-        return rsp;
-      }
-      // computation request output
-      return {
+      var rsp = {
+        address: this.address,
         value: this.value,
-        color: this.color,
-        msgData: '0x' + this.msgData.toString('hex'),
-        gasPrice: this.gasPrice };
+        color: this.color };
 
+      if (this.storageRoot) {
+        rsp.storageRoot = this.storageRoot;
+      }
+      if (this.msgData) {
+        rsp.msgData = '0x' + this.msgData.toString('hex');
+        rsp.gasPrice = this.gasPrice;
+      }
+      return rsp;
     }
 
     /**
@@ -136,20 +130,22 @@ var _util = require('./util');function _interopRequireDefault(obj) {return obj &
 
 
 
+
     {
       var dataBuf = Buffer.alloc(this.getSize());
       (0, _util.writeUint64)(dataBuf, this.value, 0);
       dataBuf.writeUInt16BE(this.color, 8);
-      // transfer output
-      if (this.address) {
-        dataBuf.write(this.address.replace('0x', ''), 10, 'hex');
+      dataBuf.write(this.address.replace('0x', ''), 10, 'hex');
+
+      // computation request output
+      if (this.msgData) {
+        dataBuf.writeUInt32BE(this.gasPrice, 30);
+        dataBuf.writeUInt16BE(this.msgData.length, 34);
+        this.msgData.copy(dataBuf, 36, 0, this.msgData.length);
+      } else {// transfer output
         if (this.storageRoot) {
           dataBuf.write(this.storageRoot.replace('0x', ''), 30, 'hex');
         }
-      } else {// computation request output
-        dataBuf.writeUInt32BE(this.gasPrice, 10);
-        dataBuf.writeUInt16BE(this.msgData.length, 14);
-        this.msgData.copy(dataBuf, 16, 0, this.msgData.length);
       }
       return dataBuf;
     } }], [{ key: 'fromJSON', value: function fromJSON(json) {(0, _assert2.default)(json, 'Output data is required.');return new Output(json);} /**
@@ -160,6 +156,6 @@ var _util = require('./util');function _interopRequireDefault(obj) {return obj &
                                                                                                                                                  *                            1 is comp request
                                                                                                                                                  *                            2 is comp response
                                                                                                                                                  * @returns {Output}
-                                                                                                                                                 */ }, { key: 'fromRaw', value: function fromRaw(buf) {var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;var isComp = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;var value = (0, _util.readUint64)(buf, offset);var color = buf.readUInt16BE(offset + 8); // computation request output
-      if (isComp === 1) {var gasPrice = buf.readUInt32BE(offset + 10);var length = buf.readUInt16BE(offset + 14);if (offset + 16 + length > buf.length) {throw new Error('Length out of bounds.');}var msgData = Buffer.alloc(length);buf.copy(msgData, 0, offset + 16, offset + 16 + length);return new Output({ value: value, color: color, msgData: msgData, gasPrice: gasPrice });}var address = '0x' + buf.slice(offset + 10, offset + 30).toString('hex');if (isComp === 2) {if (offset + 62 > buf.length) {throw new Error('Length out of bounds.');}var storageRoot = '0x' + buf.slice(offset + 30, offset + 62).toString('hex');return new Output({ value: value, color: color, address: address, storageRoot: storageRoot });} // transfer output
+                                                                                                                                                 */ }, { key: 'fromRaw', value: function fromRaw(buf) {var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;var isComp = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;var value = (0, _util.readUint64)(buf, offset);var color = buf.readUInt16BE(offset + 8);var address = '0x' + buf.slice(offset + 10, offset + 30).toString('hex'); // computation request output
+      if (isComp === 1) {var gasPrice = buf.readUInt32BE(offset + 30);var length = buf.readUInt16BE(offset + 34);if (offset + 36 + length > buf.length) {throw new Error('Length out of bounds.');}var msgData = Buffer.alloc(length);buf.copy(msgData, 0, offset + 36, offset + 36 + length);return new Output({ value: value, color: color, address: address, msgData: msgData, gasPrice: gasPrice });}if (isComp === 2) {if (offset + 62 > buf.length) {throw new Error('Length out of bounds.');}var storageRoot = '0x' + buf.slice(offset + 30, offset + 62).toString('hex');return new Output({ value: value, color: color, address: address, storageRoot: storageRoot });} // transfer output
       return new Output(value, address, color);} }]);return Output;}();exports.default = Output;
