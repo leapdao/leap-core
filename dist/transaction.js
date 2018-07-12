@@ -104,6 +104,18 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     /*
                                                               * Returns raw transaction size.
                                                               * See `toRaw` for details.
@@ -159,6 +171,16 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
     // Signs each input with provided private keys
     // @param {Array} privKeys - array of private keys strings.
   }, { key: 'sign', value: function sign(privKeys) {
+      if (this.type === _type2.default.PERIOD_VOTE) {
+        var sig = _ethereumjsUtil2.default.ecsign(
+        Buffer.from(this.options.merkleRoot.replace('0x', ''), 'hex'),
+        Buffer.from(privKeys.replace('0x', ''), 'hex'));
+
+        this.options.v = sig.v;
+        this.options.r = '0x' + sig.r.toString('hex');
+        this.options.s = '0x' + sig.s.toString('hex');
+        return this;
+      }
       if (privKeys.length !== this.inputs.length) {
         throw Error('amount of private keys doesn\'t match amount of inputs');
       }
@@ -168,12 +190,12 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
       }
       var startIdx = this.type === _type2.default.TRANSFER ? 0 : 1;
       for (var i = startIdx; i < privKeys.length; i++) {
-        var sig = _ethereumjsUtil2.default.ecsign(
+        var _sig = _ethereumjsUtil2.default.ecsign(
         this.sigHashBuf(),
         Buffer.from(privKeys[i].replace('0x', ''), 'hex'));
 
         this.inputs[i].setSig(
-        sig.r, sig.s, sig.v, // sig
+        _sig.r, _sig.s, _sig.v, // sig
         (0, _util.toHexString)(_ethereumjsUtil2.default.privateToAddress(privKeys[i])) // signer
         );
       }
@@ -286,6 +308,15 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
         payload.write(this.options.tenderKey.replace('0x', ''), 4, 'hex');
         payload.writeUInt32BE(this.options.eventsCount, 36);
         payload.writeUInt32BE(this.options.activationEpoch, 40);
+      } else if (this.type === _type2.default.PERIOD_VOTE) {
+        payload = Buffer.alloc(99, 0);
+        payload.writeUInt8(this.type, 0);
+        payload.writeUInt8(0, 1); // 0 inputs, 0 output
+        payload.write(this.options.merkleRoot.replace('0x', ''), 2, 'hex');
+        payload.writeUInt8(this.options.v, 34);
+        payload.write(this.options.r.replace('0x', ''), 35, 'hex');
+        payload.write(this.options.s.replace('0x', ''), 67, 'hex');
+
       } else if (this.type === _type2.default.EXIT) {
         payload = Buffer.alloc(34, 0);
         payload.writeUInt8(this.type, 0);
@@ -330,7 +361,7 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
       }
 
       return json;
-    } }], [{ key: 'validatorJoin', value: function validatorJoin(slotId, tenderKey, eventsCount) {return new Transaction(_type2.default.VALIDATOR_JOIN, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase() });} }, { key: 'validatorLogout', value: function validatorLogout(slotId, tenderKey, eventsCount, activationEpoch) {return new Transaction(_type2.default.VALIDATOR_LOGOUT, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase(), activationEpoch: activationEpoch });} }, { key: 'validatorLeave', value: function validatorLeave(slotId, tenderKey, eventsCount) {return new Transaction(_type2.default.VALIDATOR_LEAVE, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase() });} }, { key: 'deposit', value: function deposit(depositId, value, address, color) {return new Transaction(_type2.default.DEPOSIT, [], [new _output2.default(value, address, color)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(_type2.default.EXIT, [input]);} }, { key: 'transfer', value: function transfer(inputs, outputs) {return new Transaction(_type2.default.TRANSFER, inputs, outputs);} }, { key: 'consolidate', value: function consolidate(inputs, output) {inputs.forEach(function (input) {input.type = _type2.default.CONSOLIDATE; // eslint-disable-line
+    } }], [{ key: 'validatorJoin', value: function validatorJoin(slotId, tenderKey, eventsCount) {return new Transaction(_type2.default.VALIDATOR_JOIN, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase() });} }, { key: 'validatorLogout', value: function validatorLogout(slotId, tenderKey, eventsCount, activationEpoch) {return new Transaction(_type2.default.VALIDATOR_LOGOUT, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase(), activationEpoch: activationEpoch });} }, { key: 'validatorLeave', value: function validatorLeave(slotId, tenderKey, eventsCount) {return new Transaction(_type2.default.VALIDATOR_LEAVE, [], [], { slotId: slotId, eventsCount: eventsCount, tenderKey: tenderKey.toLowerCase() });} }, { key: 'periodVote', value: function periodVote(merkleRoot, v, r, s) {var options = { merkleRoot: merkleRoot };if (v) {options.v = v;options.r = r;options.s = s;}return new Transaction(_type2.default.PERIOD_VOTE, [], [], options);} }, { key: 'deposit', value: function deposit(depositId, value, address, color) {return new Transaction(_type2.default.DEPOSIT, [], [new _output2.default(value, address, color)], { depositId: depositId });} }, { key: 'exit', value: function exit(input) {return new Transaction(_type2.default.EXIT, [input]);} }, { key: 'transfer', value: function transfer(inputs, outputs) {return new Transaction(_type2.default.TRANSFER, inputs, outputs);} }, { key: 'consolidate', value: function consolidate(inputs, output) {inputs.forEach(function (input) {input.type = _type2.default.CONSOLIDATE; // eslint-disable-line
       });return new Transaction(_type2.default.CONSOLIDATE, inputs, [output]);} }, { key: 'compRequest', value: function compRequest(inputs, outputs) {inputs[0].type = _type2.default.COMP_REQ; // eslint-disable-line no-param-reassign
       return new Transaction(_type2.default.COMP_REQ, inputs, outputs);} }, { key: 'compResponse', value: function compResponse(inputs, outputs) {inputs[0].type = _type2.default.COMP_RESP; // eslint-disable-line no-param-reassign
       return new Transaction(_type2.default.COMP_RESP, inputs, outputs);} }, { key: 'sigHashBufStatic', value: function sigHashBufStatic(type, raw, inputsLength) {var noSigs = Buffer.alloc(raw.length, 0);var offset = 2; // copy type, height and lengths
@@ -387,6 +418,16 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
             var _eventsCount = dataBuf.readUInt32BE(36);
             var activationEpoch = dataBuf.readUInt32BE(40);
             return Transaction.validatorLogout(_slotId, _tenderKey, _eventsCount, activationEpoch);
+          }
+        case _type2.default.PERIOD_VOTE:{
+            if (dataBuf.length !== 99) {
+              throw new Error('malformed periodVote tx.');
+            }
+            var merkleRoot = '0x' + dataBuf.slice(2, 34).toString('hex');
+            var v = dataBuf.readUInt8(34);
+            var r = '0x' + dataBuf.slice(35, 67).toString('hex');
+            var s = '0x' + dataBuf.slice(67, 99).toString('hex');
+            return Transaction.periodVote(merkleRoot, v, r, s);
           }
         case _type2.default.EXIT:{
             if (dataBuf.length !== 34) {

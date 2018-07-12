@@ -7,4 +7,5 @@
   EXIT: 7,
   VALIDATOR_JOIN: 8,
   VALIDATOR_LOGOUT: 9,
-  VALIDATOR_LEAVE: 10 };module.exports = exports["default"];
+  VALIDATOR_LEAVE: 10,
+  PERIOD_VOTE: 11 };module.exports = exports["default"];
