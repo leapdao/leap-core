@@ -1,11 +1,11 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
-
-
-
-
-
-
-
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  */
 
 var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _fastEquals = require('fast-equals');
@@ -14,15 +14,15 @@ var _input = require('./input');var _input2 = _interopRequireDefault(_input);
 var _output = require('./output');var _output2 = _interopRequireDefault(_output);
 var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
 var _util = require('./util');
-var _type = require('./type');var _type2 = _interopRequireDefault(_type);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _type = require('./type');var _type2 = _interopRequireDefault(_type);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}
 
-var EMPTY_BUF = Buffer.alloc(32, 0); /**
-                                      * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                                      *
-                                      * This source code is licensed under the GNU Affero General Public License,
-                                      * version 3, found in the LICENSE file in the root directory of this source
-                                      * tree.
-                                      */var Transaction = function () {function Transaction(type) {var inputs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];var outputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];var options = arguments[3];(0, _classCallCheck3.default)(this, Transaction);this.type = type;
+var EMPTY_BUF = Buffer.alloc(32, 0);var
+
+
+Transaction = function () {
+
+  function Transaction(type) {var inputs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];var outputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];var options = arguments[3];_classCallCheck(this, Transaction);
+    this.type = type;
     this.inputs = inputs;
     this.outputs = outputs;
     this.options = options;
@@ -31,7 +31,7 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
     if (this.inputs.length && this.inputs[0].v && !this.inputs[0].signer) {
       this.recoverTxSigner();
     }
-  }(0, _createClass3.default)(Transaction, [{ key: 'getSize',
+  }_createClass(Transaction, [{ key: 'getSize',
 
 
 
@@ -117,9 +117,9 @@ var EMPTY_BUF = Buffer.alloc(32, 0); /**
 
 
     /*
-                                                              * Returns raw transaction size.
-                                                              * See `toRaw` for details.
-                                                              */value: function getSize()
+                                                * Returns raw transaction size.
+                                                * See `toRaw` for details.
+                                                */value: function getSize()
     {
       if (this.type === _type2.default.DEPOSIT) {
         return 36;

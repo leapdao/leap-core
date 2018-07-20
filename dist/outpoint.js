@@ -1,15 +1,15 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUTPOINT_LENGTH = undefined;var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
-
-
-
-
-
-
-
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUTPOINT_LENGTH = undefined;var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _encoding = require('./encoding');var _encoding2 = _interopRequireDefault(_encoding);
-var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _util = require('./util');var _util2 = _interopRequireDefault(_util);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}
 
 
 // 32 bytes prev tx + 1 byte output pos
@@ -17,13 +17,13 @@ var OUTPOINT_LENGTH = exports.OUTPOINT_LENGTH = 33;
 
 /*
                                                      * Helpers
-                                                     */ /**
-                                                         * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                                                         *
-                                                         * This source code is licensed under the GNU Affero General Public License,
-                                                         * version 3, found in the LICENSE file in the root directory of this source
-                                                         * tree.
-                                                         */function strcmp(a, b) {var len = Math.min(a.length, b.length);for (var i = 0; i < len; i++) {if (a[i] < b[i]) {return -1;}if (a[i] > b[i]) {return 1;}
+                                                     */
+function strcmp(a, b) {
+  var len = Math.min(a.length, b.length);
+
+  for (var i = 0; i < len; i++) {
+    if (a[i] < b[i]) {return -1;}
+    if (a[i] > b[i]) {return 1;}
   }
 
   if (a.length < b.length) {return -1;}
@@ -34,7 +34,7 @@ var OUTPOINT_LENGTH = exports.OUTPOINT_LENGTH = 33;
 }var
 
 Outpoint = function () {
-  function Outpoint(hash, index) {(0, _classCallCheck3.default)(this, Outpoint);
+  function Outpoint(hash, index) {_classCallCheck(this, Outpoint);
     if (hash) {
       if (typeof hash === 'string') {
         (0, _assert2.default)(_util2.default.isBytes32(hash), 'Hash must be hex256.');
@@ -56,16 +56,16 @@ Outpoint = function () {
      * Test an object to see if it is an outpoint.
      * @param {Object} obj
      * @returns {Boolean}
-     */(0, _createClass3.default)(Outpoint, [{ key: 'equals',
+     */_createClass(Outpoint, [{ key: 'equals',
 
 
 
 
     /**
-                                                               * Test equality against another outpoint.
-                                                               * @param {Outpoint} prevout
-                                                               * @returns {Boolean}
-                                                               */value: function equals(
+                                                 * Test equality against another outpoint.
+                                                 * @param {Outpoint} prevout
+                                                 * @returns {Boolean}
+                                                 */value: function equals(
     prevout) {
       (0, _assert2.default)(Outpoint.isOutpoint(prevout));
       return this.hash === prevout.hash &&

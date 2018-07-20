@@ -1,22 +1,22 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  */
 
-
-
-
-
-
-
-
-
-
-
-
-var _ethereumjsUtil = require('ethereumjs-util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+// Adopted from: https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/test/helpers/merkleTree.js
+// Changes:
+// - Removed sorting and deduplication
+// - Added padding to even number of elements
+var _ethereumjsUtil = require('ethereumjs-util');function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}
 
 /* eslint-disable class-methods-use-this */var
 MerkleTree = function () {
 
-  function MerkleTree(elements) {(0, _classCallCheck3.default)(this, MerkleTree);
+  function MerkleTree(elements) {_classCallCheck(this, MerkleTree);
     // Filter empty strings and hash elements
     this.elements = elements.filter(function (el) {return el;});
 
@@ -26,7 +26,7 @@ MerkleTree = function () {
 
     // Create layers
     this.layers = this.getLayers(this.elements);
-  }(0, _createClass3.default)(MerkleTree, [{ key: 'getLayers', value: function getLayers(
+  }_createClass(MerkleTree, [{ key: 'getLayers', value: function getLayers(
 
     elements) {
       if (elements.length === 0) {
@@ -133,14 +133,4 @@ MerkleTree = function () {
     } }]);return MerkleTree;}();
 
 
-/* eslint-enable class-methods-use-this */ /**
-                                            * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                                            *
-                                            * This source code is licensed under the GNU Affero General Public License,
-                                            * version 3, found in the LICENSE file in the root directory of this source
-                                            * tree.
-                                            */ // Adopted from: https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/test/helpers/merkleTree.js
-// Changes:
-// - Removed sorting and deduplication
-// - Added padding to even number of elements
-exports.default = MerkleTree;module.exports = exports['default'];
+/* eslint-enable class-methods-use-this */exports.default = MerkleTree;module.exports = exports['default'];

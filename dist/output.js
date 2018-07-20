@@ -1,23 +1,23 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUT_LENGTH = undefined;var _typeof2 = require('babel-runtime/helpers/typeof');var _typeof3 = _interopRequireDefault(_typeof2);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
-
-
-
-
-
-
-
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.OUT_LENGTH = undefined;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {return typeof obj;} : function (obj) {return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          */
 
 var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
-var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _util = require('./util');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}
 
 // 8 bytes - value, 20 bytes - address, 2 bytes color
-/**
- * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
- *
- * This source code is licensed under the GNU Affero General Public License,
- * version 3, found in the LICENSE file in the root directory of this source
- * tree.
- */var OUT_LENGTH = exports.OUT_LENGTH = 30;var Output = function () {function Output(valueOrObject, address, color) {(0, _classCallCheck3.default)(this, Output);if ((typeof valueOrObject === 'undefined' ? 'undefined' : (0, _typeof3.default)(valueOrObject)) === 'object') {if (valueOrObject.address) {
+var OUT_LENGTH = exports.OUT_LENGTH = 30;var
+
+Output = function () {
+
+  function Output(valueOrObject, address, color) {_classCallCheck(this, Output);
+    if ((typeof valueOrObject === 'undefined' ? 'undefined' : _typeof(valueOrObject)) === 'object') {
+      if (valueOrObject.address) {
         this.value = valueOrObject.value;
         this.color = valueOrObject.color;
         this.address = valueOrObject.address;
@@ -45,7 +45,7 @@ var _util = require('./util');function _interopRequireDefault(obj) {return obj &
     }
   }
 
-  /* eslint-disable class-methods-use-this */(0, _createClass3.default)(Output, [{ key: 'getSize', value: function getSize()
+  /* eslint-disable class-methods-use-this */_createClass(Output, [{ key: 'getSize', value: function getSize()
     {
       if (this.storageRoot) {
         return OUT_LENGTH + 32;

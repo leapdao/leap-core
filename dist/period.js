@@ -1,24 +1,24 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
-
-
-
-
-
-
-
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  */
 
 var _ethereumjsUtil = require('ethereumjs-util');
-var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} /**
-                                                                                                                                                                                                * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                                                                                                                                                                                                *
-                                                                                                                                                                                                * This source code is licensed under the GNU Affero General Public License,
-                                                                                                                                                                                                * version 3, found in the LICENSE file in the root directory of this source
-                                                                                                                                                                                                * tree.
-                                                                                                                                                                                                */var Period = function () {function Period(prevHash, blocks) {var _this = this;(0, _classCallCheck3.default)(this, Period);this.prevHash = prevHash;this.blockList = [];this.blockHashList = [];
+var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var
+
+Period = function () {
+  function Period(prevHash, blocks) {var _this = this;_classCallCheck(this, Period);
+    this.prevHash = prevHash;
+    this.blockList = [];
+    this.blockHashList = [];
     if (blocks) {
       blocks.forEach(function (block) {return _this.addBlock(block);});
     }
-  }(0, _createClass3.default)(Period, [{ key: 'addBlock', value: function addBlock(
+  }_createClass(Period, [{ key: 'addBlock', value: function addBlock(
 
     block) {
       if (this.blockHashList.indexOf(block.hash()) > -1) {

@@ -1,32 +1,32 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.SPEND_INPUT_LENGTH = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
-
-
-
-
-
-
-
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.SPEND_INPUT_LENGTH = undefined;var _extends = Object.assign || function (target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i];for (var key in source) {if (Object.prototype.hasOwnProperty.call(source, key)) {target[key] = source[key];}}}return target;};var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
 var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _outpoint = require('./outpoint');var _outpoint2 = _interopRequireDefault(_outpoint);
 var _util = require('./util');var _util2 = _interopRequireDefault(_util);
-var _type = require('./type');var _type2 = _interopRequireDefault(_type);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _type = require('./type');var _type2 = _interopRequireDefault(_type);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}
 
 // outpoint(32 bytes prev tx + 1 byte output pos) + 65 bytes signature
-var SPEND_INPUT_LENGTH = exports.SPEND_INPUT_LENGTH = 33 + 65; /**
-                                                                * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                                                                *
-                                                                * This source code is licensed under the GNU Affero General Public License,
-                                                                * version 3, found in the LICENSE file in the root directory of this source
-                                                                * tree.
-                                                                */var Input = function () {function Input(options) {(0, _classCallCheck3.default)(this, Input);if (_outpoint2.default.isOutpoint(options)) {this.prevout = options;} else if (_util2.default.isU32(options)) {
+var SPEND_INPUT_LENGTH = exports.SPEND_INPUT_LENGTH = 33 + 65;var
+
+Input = function () {
+  function Input(options) {_classCallCheck(this, Input);
+    if (_outpoint2.default.isOutpoint(options)) {
+      this.prevout = options;
+    } else if (_util2.default.isU32(options)) {
       this.depositId = options;
     } else if (options && options.prevout) {
       this.type = options.type;
       this.prevout = options.prevout;
     }
-  }(0, _createClass3.default)(Input, [{ key: 'setSigner', value: function setSigner(
+  }_createClass(Input, [{ key: 'setSigner', value: function setSigner(
 
     signer) {
       this.signer = signer;
@@ -95,12 +95,12 @@ var SPEND_INPUT_LENGTH = exports.SPEND_INPUT_LENGTH = 33 + 65; /**
 
       }
       if (this.isComputation() || this.isConsolidation()) {
-        var input = (0, _extends3.default)({}, this.prevout); // toJSON shouldn't mutate existing objects
+        var input = _extends({}, this.prevout); // toJSON shouldn't mutate existing objects
         input.hash = _ethereumjsUtil2.default.bufferToHex(input.hash);
         return input;
       }
       if (this.isSpend()) {
-        var _input = (0, _extends3.default)({}, this.prevout); // toJSON shouldn't mutate existing objects
+        var _input = _extends({}, this.prevout); // toJSON shouldn't mutate existing objects
         _input.hash = _ethereumjsUtil2.default.bufferToHex(_input.hash);
         if (this.signer) {
           _input.r = _ethereumjsUtil2.default.bufferToHex(this.r);

@@ -1,21 +1,21 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  */
 
+var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var
 
-
-
-
-
-
-
-var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var
-
-Util = function () {function Util() {(0, _classCallCheck3.default)(this, Util);}(0, _createClass3.default)(Util, null, [{ key: 'isUint',
+Util = function () {function Util() {_classCallCheck(this, Util);}_createClass(Util, null, [{ key: 'isUint',
 
     /**
-                                                                                                                                          * Test whether an object is a uint.
-                                                                                                                                          * @param {Number?} value
-                                                                                                                                          * @returns {Boolean}
-                                                                                                                                          */value: function isUint(
+                                                                                                              * Test whether an object is a uint.
+                                                                                                              * @param {Number?} value
+                                                                                                              * @returns {Boolean}
+                                                                                                              */value: function isUint(
     value) {
       return Util.isInt(value) && value >= 0;
     }
@@ -147,10 +147,4 @@ Util = function () {function Util() {(0, _classCallCheck3.default)(this, Util);}
 
     buffer) {
       return '0x' + buffer.toString('hex');
-    } }]);return Util;}(); /**
-                            * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                            *
-                            * This source code is licensed under the GNU Affero General Public License,
-                            * version 3, found in the LICENSE file in the root directory of this source
-                            * tree.
-                            */exports.default = Util;module.exports = exports['default'];
+    } }]);return Util;}();exports.default = Util;module.exports = exports['default'];

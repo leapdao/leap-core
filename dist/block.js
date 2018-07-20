@@ -1,28 +1,28 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _log = require('babel-runtime/core-js/math/log2');var _log2 = _interopRequireDefault(_log);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);
-
-
-
-
-
-
-
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * This source code is licensed under the GNU Affero General Public License,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * version 3, found in the LICENSE file in the root directory of this source
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  */
 
 var _ethereumjsUtil = require('ethereumjs-util');var _ethereumjsUtil2 = _interopRequireDefault(_ethereumjsUtil);
 var _assert = require('assert');var _assert2 = _interopRequireDefault(_assert);
 var _fastEquals = require('fast-equals');
 var _merkleTree = require('./merkleTree');var _merkleTree2 = _interopRequireDefault(_merkleTree);
 var _util = require('./util');
-var _transaction = require('./transaction');var _transaction2 = _interopRequireDefault(_transaction);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} /**
-                                                                                                                                                                                                    * Copyright (c) 2018-present, Parsec Labs (parseclabs.org)
-                                                                                                                                                                                                    *
-                                                                                                                                                                                                    * This source code is licensed under the GNU Affero General Public License,
-                                                                                                                                                                                                    * version 3, found in the LICENSE file in the root directory of this source
-                                                                                                                                                                                                    * tree.
-                                                                                                                                                                                                    */var Block = function () {function Block(height, options) {(0, _classCallCheck3.default)(this, Block);var _ref = options || {},timestamp = _ref.timestamp,txs = _ref.txs;this.height = height;this.timestamp = timestamp;
+var _transaction = require('./transaction');var _transaction2 = _interopRequireDefault(_transaction);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}var
+
+Block = function () {
+  function Block(height, options) {_classCallCheck(this, Block);var _ref =
+    options || {},timestamp = _ref.timestamp,txs = _ref.txs;
+    this.height = height;
+    this.timestamp = timestamp;
     this.txList = txs || [];
     this.txHashList = this.txList.map(function (tx) {return tx.hash();});
     this.merkleTree = null;
-  }(0, _createClass3.default)(Block, [{ key: 'addTx', value: function addTx(
+  }_createClass(Block, [{ key: 'addTx', value: function addTx(
 
     tx) {
       if (this.txHashList.indexOf(tx.hash()) > -1) {
@@ -171,7 +171,7 @@ var _transaction = require('./transaction');var _transaction2 = _interopRequireD
         nextPow++;
         // 2. shift proofOffset
         // 3. add numbers
-        pos += proofOffset << (0, _log2.default)(nextPow); // eslint-disable-line no-bitwise
+        pos += proofOffset << Math.log2(nextPow); // eslint-disable-line no-bitwise
       }
       var slices = [];
       slices.push(this.merkleRoot());
