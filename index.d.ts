@@ -122,7 +122,7 @@ declare module "parsec-lib" {
     public outputs: Array<Output>;
     public options?: TxOptions;
 
-    public static validatorJoin(slotId: number, tenderKey: string, eventsCount: number): Tx<Type.VALIDATOR_JOIN>;
+    public static validatorJoin(slotId: number, tenderKey: string, eventsCount: number, signerAddr: string): Tx<Type.VALIDATOR_JOIN>;
     public static validatorLogout(slotId: number, tenderKey: string, eventsCount: number, activationEpoch: number): Tx<Type.VALIDATOR_LOGOUT>;
     public static deposit(depositId: number, value: number, address: string, color: number): Tx<Type.DEPOSIT>;
     public static exit(input: Input): Tx<Type.EXIT>;
