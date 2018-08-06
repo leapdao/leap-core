@@ -9,6 +9,7 @@ declare module "parsec-lib" {
     VALIDATOR_JOIN = 8,
     VALIDATOR_LOGOUT = 9,
     PERIOD_VOTE = 11,
+    EPOCH_LENGTH = 12,
   }
 
   type TransferOutputObject = {
@@ -125,6 +126,7 @@ declare module "parsec-lib" {
     public static validatorJoin(slotId: number, tenderKey: string, eventsCount: number, signerAddr: string): Tx<Type.VALIDATOR_JOIN>;
     public static validatorLogout(slotId: number, tenderKey: string, eventsCount: number, activationEpoch: number, newSigner: string): Tx<Type.VALIDATOR_LOGOUT>;
     public static deposit(depositId: number, value: number, address: string, color: number): Tx<Type.DEPOSIT>;
+    public static epochLength(epochLength: number): Tx<Type.EPOCH_LENGTH>;
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
     public static consolidate(inputs: Array<Input>, output: Output): Tx<Type.CONSOLIDATE>;
