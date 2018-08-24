@@ -19,19 +19,20 @@ declare module "parsec-lib" {
   };
 
   export type OutputJSON = {
-    value: number;
+    value: number | string;
     address: string;
     color: number;
     storageRoot?: string;
   };
 
   export class Output {
-    constructor(valueOrObject: number | TransferOutputObject, address?: string, color?: number);
-    public value: number;
+    constructor(valueOrObject: number | string | TransferOutputObject, address?: string, color?: number);
+    public value: number | string;
     public address: string;
     public color: number;
     public storageRoot?: string;
 
+    public isNFT(): boolean;
     public getSize(): number;
     public toJSON(): OutputJSON;
     public toRaw(): Buffer;
