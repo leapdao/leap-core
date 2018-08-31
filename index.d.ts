@@ -37,6 +37,7 @@ declare module "parsec-lib" {
     public toJSON(): OutputJSON;
     public toRaw(): Buffer;
 
+    public static isNFT(color: number): boolean;
     public static fromJSON(json: OutputJSON): Output;
     public static fromRaw(buf: Buffer, offset: number, isComp: number): Output;
   }
