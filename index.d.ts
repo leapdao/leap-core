@@ -1,5 +1,6 @@
 declare module "parsec-lib" {
-  import Web3 = require('web3');
+  import Web3 from 'web3';
+  import { Callback } from 'web3/types.d';
 
   export enum Type {
     DEPOSIT = 2,
@@ -167,10 +168,10 @@ declare module "parsec-lib" {
   };
 
   class ExtendedWeb3 extends Web3 {
-    public getUnspent(address: string): Array<Unspent>;
-    public getColor(tokenContractAddress: string): number;
-    public getColors(): string[];
-    public status(): string;
+    public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
+    public getColor(tokenContractAddress: string, cb?: Callback<number>): Promise<number>;
+    public getColors(cb?: Callback<string[]>): Promise<string[]>;
+    public status(cb?: Callback<string>): Promise<string>;
   }
 
   namespace helpers {
