@@ -1,4 +1,6 @@
 declare module "parsec-lib" {
+  import Web3 = require('web3');
+
   export enum Type {
     DEPOSIT = 2,
     TRANSFER = 3,
@@ -76,7 +78,7 @@ declare module "parsec-lib" {
     signer?: string;
   };
 
-  export export type InputJSON = DepositJSON | SpentJSON;
+  export type InputJSON = DepositJSON | SpentJSON;
 
   export class Input {
     constructor(options: Outpoint | number | { prevout: Outpoint, type: Type });
@@ -162,11 +164,17 @@ declare module "parsec-lib" {
     output: OutputJSON;
   };
 
-  namespace helpers {
+  class ExtendedWeb3 extends Web3 {
+    public getUnspent(address: string): Array<Unspent>;
+    public getColor(tokenContractAddress: string): number;
+    public getColors(): string[];
+    public status(): string;
+  }
 
+  namespace helpers {
     export function calcInputs(unspent: Array<Unspent>, from: string, amount: number, color: number): Array<Input>;
     export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number, color): Array<Output>;
 
-    export function extendWeb3(web3Instance: any): any;
+    export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
   }
 }
