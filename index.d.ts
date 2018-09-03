@@ -12,7 +12,7 @@ declare module "parsec-lib" {
     EPOCH_LENGTH = 12,
   }
 
-  type TransferOutputObject = {
+  export type TransferOutputObject = {
     value: number;
     address: string;
     storageRoot?: string;
@@ -64,11 +64,11 @@ declare module "parsec-lib" {
     public static fromTx(tx: Tx<any>, index: number): Outpoint;
   }
 
-  type DepositJSON = {
+  export type DepositJSON = {
     depositId: number;
   };
 
-  type SpentJSON = OutpointJSON & {
+  export type SpentJSON = OutpointJSON & {
     hash: string;
     r?: string;
     s?: string;
@@ -76,7 +76,7 @@ declare module "parsec-lib" {
     signer?: string;
   };
 
-  export type InputJSON = DepositJSON | SpentJSON;
+  export export type InputJSON = DepositJSON | SpentJSON;
 
   export class Input {
     constructor(options: Outpoint | number | { prevout: Outpoint, type: Type });
@@ -102,14 +102,14 @@ declare module "parsec-lib" {
     public static recoverSignerAddress(sigHashBuf: Buffer, v: number, r: Buffer, s: Buffer): string;
   }
 
-  type TxOptions = {
+  export type TxOptions = {
     depositId?: number;
     slotId?: number;
     tenderKey?: string;
     activationEpoch?: number;
   };
 
-  type TxJSON = {
+  export type TxJSON = {
     type: Type;
     hash: string;
     inputs: Array<InputJSON>;
@@ -157,11 +157,12 @@ declare module "parsec-lib" {
     public toJSON(): TxJSON;
   }
 
+  export type Unspent = {
+    outpoint: Outpoint;
+    output: OutputJSON;
+  };
+
   namespace helpers {
-    type Unspent = {
-      outpoint: Outpoint;
-      output: OutputJSON;
-    };
 
     export function calcInputs(unspent: Array<Unspent>, from: string, amount: number, color: number): Array<Input>;
     export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number, color): Array<Output>;
