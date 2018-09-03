@@ -1,4 +1,6 @@
 declare module "parsec-lib" {
+  import Web3 = require('web3');
+
   export enum Type {
     DEPOSIT = 2,
     TRANSFER = 3,
@@ -12,7 +14,7 @@ declare module "parsec-lib" {
     EPOCH_LENGTH = 12,
   }
 
-  type TransferOutputObject = {
+  export type TransferOutputObject = {
     value: number;
     address: string;
     storageRoot?: string;
@@ -66,11 +68,11 @@ declare module "parsec-lib" {
     public static fromTx(tx: Tx<any>, index: number): Outpoint;
   }
 
-  type DepositJSON = {
+  export type DepositJSON = {
     depositId: number;
   };
 
-  type SpentJSON = OutpointJSON & {
+  export type SpentJSON = OutpointJSON & {
     hash: string;
     r?: string;
     s?: string;
@@ -104,14 +106,14 @@ declare module "parsec-lib" {
     public static recoverSignerAddress(sigHashBuf: Buffer, v: number, r: Buffer, s: Buffer): string;
   }
 
-  type TxOptions = {
+  export type TxOptions = {
     depositId?: number;
     slotId?: number;
     tenderKey?: string;
     activationEpoch?: number;
   };
 
-  type TxJSON = {
+  export type TxJSON = {
     type: Type;
     hash: string;
     inputs: Array<InputJSON>;
@@ -159,15 +161,22 @@ declare module "parsec-lib" {
     public toJSON(): TxJSON;
   }
 
-  namespace helpers {
-    type Unspent = {
-      outpoint: Outpoint;
-      output: OutputJSON;
-    };
+  export type Unspent = {
+    outpoint: Outpoint;
+    output: OutputJSON;
+  };
 
+  class ExtendedWeb3 extends Web3 {
+    public getUnspent(address: string): Array<Unspent>;
+    public getColor(tokenContractAddress: string): number;
+    public getColors(): string[];
+    public status(): string;
+  }
+
+  namespace helpers {
     export function calcInputs(unspent: Array<Unspent>, from: string, amount: number, color: number): Array<Input>;
     export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number, color): Array<Output>;
 
-    export function extendWeb3(web3Instance: any): any;
+    export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
   }
 }
