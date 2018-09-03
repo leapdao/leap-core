@@ -57,8 +57,8 @@
     "utf8": "^2.1.2"
   },
   "dependencies": {
-    "@types/web3": "^1.0.3",
     "ethereumjs-util": "^4.5.0",
-    "fast-equals": "^1.5.0"
+    "fast-equals": "^1.5.0",
+    "web3": "^1.0.0-beta.35"
   }
 }
