@@ -154,6 +154,7 @@ declare module "parsec-lib" {
     public sigHash(): string;
     public sign(privKeys: string[]): Tx<TxType>;
     public signAll(privKey: string): Tx<TxType>;
+    public signWeb3(web3: Web3): Tx<TxType>;
     public hashBuf(): Buffer;
     public hash(): string;
     public hex(): string;
