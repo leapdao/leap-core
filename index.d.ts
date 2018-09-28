@@ -162,6 +162,59 @@ declare module "parsec-lib" {
     public toJSON(): TxJSON;
   }
 
+  class MerkleTree {
+    constructor(elements: Buffer[]);
+    getLayers(elements: Buffer[]);
+    getNextLayer(elements: Buffer[]);
+    combinedHash(first: Buffer, second: Buffer): Buffer;
+    getRoot(): Buffer;
+    getHexRoot(): string;
+    getProof(el: Buffer): Buffer[];
+    getHexProof(el: Buffer): string[];
+    getPairElement(idx: number, layer: Buffer[]);
+    bufIndexOf(el: Buffer, arr: Buffer[]);
+    bufArrToHexArr(arr: Buffer[]): string[];
+  }
+
+  export type BlockOptions = {
+    timestamp: number;
+    txs: Array<Tx<any>>;
+  };
+
+  export type BlockJSON = {
+    height: number;
+    timestamp: number;
+    txs: Array<TxJSON>;
+  };
+
+  class Block {
+    constructor(height: number, options: BlockOptions);
+    public addTx(tx: Tx<any>): Block;
+    public getMerkleTree(): MerkleTree;
+    public merkleRoot(): string;
+    public header(payload: Buffer): Buffer;
+    public hash(): string;
+    public hex(): string;
+    public equals(another: Block): boolean;
+    public getSize(): number;
+
+    public toJSON(): BlockJSON;
+    public static fromJSON(json: BlockJSON): Block;
+
+    public toRaw(): Buffer;
+    public static fromRaw(raw: Buffer): Block;
+
+    public proof(tx: Tx<any>, proofOffset: number): string[];
+  }
+
+  class Period {
+    constructor(prevHash: string, blocks: Array<Block>);
+    addBlock(block: Block): Period;
+    getMerkleTree(): MerkleTree;
+    merkleRoot(): string;
+    proof(tx: Tx<any>): string[];
+  }
+
   export type Unspent = {
     outpoint: Outpoint;
     output: OutputJSON;
