@@ -57,6 +57,7 @@
     "utf8": "^2.1.2"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "bn.js": "^4.11.8",
     "ethereumjs-util": "^4.5.0",
     "fast-equals": "^1.5.0",
