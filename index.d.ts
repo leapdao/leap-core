@@ -220,11 +220,33 @@ declare module "parsec-lib" {
     output: OutputJSON;
   };
 
+  export type NodeConfig = {
+    peers?: string[],
+    genesis?: {
+      app_hash: string;
+      chain_id: string;
+      consensus_params: any;
+      genesis_time: string;
+      validators: Array<{
+        name: string;
+        power: string;
+        pub_key: {
+          type: string;
+          value: string;
+        }
+      }>
+    },
+    network: string;
+    rootNetwork: string;
+    bridgeAddr: string;
+  };
+
   class ExtendedWeb3 extends Web3 {
     public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
     public getColor(tokenContractAddress: string, cb?: Callback<number>): Promise<number>;
     public getColors(cb?: Callback<string[]>): Promise<string[]>;
     public status(cb?: Callback<string>): Promise<string>;
+    public getConfig(cb?: Callback<NodeConfig>): Promise<NodeConfig>;
   }
 
   namespace helpers {
