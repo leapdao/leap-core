@@ -145,13 +145,13 @@ declare module "parsec-lib" {
       options?: TxOptions;
     }): Tx<TxType>;
     public static fromRaw(transaction: Buffer | string): Tx<any>;
-    static sigHashBufStatic(type: Type, raw: Buffer, inputsLength: number): Buffer;
+    static sigDataStatic(type: Type, raw: Buffer, inputsLength: number): Buffer;
     static parseToParams(transaction: Tx<any>): string[];
 
     public getSize(): number;
     public recoverTxSigner(): void;
-    public sigHashBuf(): Buffer;
-    public sigHash(): string;
+    public sigDataBuf(): Buffer;
+    public sigData(): string;
     public sign(privKeys: string[]): Tx<TxType>;
     public signAll(privKey: string): Tx<TxType>;
     public signWeb3(web3: Web3): Tx<TxType>;
