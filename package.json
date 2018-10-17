@@ -1,6 +1,6 @@
 {
   "name": "parsec-lib",
-  "version": "0.17.0",
+  "version": "0.17.0-web3.5",
   "description": "transaction and block implementation",
   "main": "dist/index.js",
   "keywords": [
@@ -54,12 +54,13 @@
     "nyc": "^11.2.1",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
+    "truffle-hdwallet-provider": "github:0xProject/truffle-hdwallet-provider",
     "utf8": "^2.1.2"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "bn.js": "^4.11.8",
-    "ethereumjs-util": "^4.5.0",
+    "ethereumjs-util": "^6.0.0",
     "fast-equals": "^1.5.0",
     "web3": "^1.0.0-beta.35"
   }
