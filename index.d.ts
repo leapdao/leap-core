@@ -6,13 +6,14 @@ declare module "parsec-lib" {
     DEPOSIT = 2,
     TRANSFER = 3,
     CONSOLIDATE = 4,
-    COMP_REQ = 5,
-    COMP_RESP = 6,
+    // COMP_REQ = 5,
+    // COMP_RESP = 6,
     EXIT = 7,
     VALIDATOR_JOIN = 8,
     VALIDATOR_LOGOUT = 9,
     PERIOD_VOTE = 11,
     EPOCH_LENGTH = 12,
+    SPEND_COND = 13,
   }
 
   export type TransferOutputObject = {
@@ -135,8 +136,7 @@ declare module "parsec-lib" {
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
     public static consolidate(inputs: Array<Input>, output: Output): Tx<Type.CONSOLIDATE>;
-    public static compRequest(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.COMP_REQ>;
-    public static compResponse(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.COMP_RESP>;
+    public static spendCond(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.SPEND_COND>;
 
     public static fromJSON<TxType extends Type>(o: {
       type: TxType;
@@ -147,14 +147,18 @@ declare module "parsec-lib" {
     public static fromRaw(transaction: Buffer | string): Tx<any>;
     static sigDataStatic(type: Type, raw: Buffer, inputsLength: number): Buffer;
     static parseToParams(transaction: Tx<any>): string[];
+    static signMessageWithWeb3(web3: Web3, message: string): Promise<Tx<TxType>>;
 
     public getSize(): number;
     public recoverTxSigner(): void;
+    public sigHashBuf(): Buffer;
+    public sigHash(): string;
     public sigDataBuf(): Buffer;
     public sigData(): string;
     public sign(privKeys: string[]): Tx<TxType>;
     public signAll(privKey: string): Tx<TxType>;
-    public signWeb3(web3: Web3): Tx<TxType>;
+    public getConditionSig(privKey: string): {[k: string]: any};
+    public signWeb3(web3: Web3): Promise<Tx<TxType>>;
     public hashBuf(): Buffer;
     public hash(): string;
     public hex(): string;
