@@ -1,4 +1,4 @@
-# parsec-lib
+# leap-core
 
 test:
 ```
@@ -8,7 +8,7 @@ npm test
 
 install:
 ```
-npm i -S parsec-lib
+npm i -S leap-core
 ```
 
 ## Create Transaction Proof:
@@ -22,4 +22,4 @@ block.proof(transfer.toRaw(), position, [SIBLING_HASH, SIBLING_HASH])
 
 ## LICENSE
 
-Most Parsec Lib source files (lib folder and below) are made available under the terms of the GNU Affero General Public License (GNU AGPLv3). See individual files for details.
+Most source files (lib folder and below) are made available under the terms of the GNU Affero General Public License (GNU AGPLv3). See individual files for details.

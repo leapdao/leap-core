@@ -1,4 +1,12 @@
-declare module "parsec-lib" {
+/**
+ * Copyright (c) 2018-present, Leap DAO (leapdao.org)
+ *
+ * This source code is licensed under the GNU Affero General Public License,
+ * version 3, found in the LICENSE file in the root directory of this source
+ * tree.
+ */
+
+declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types.d';
 

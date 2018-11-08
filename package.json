@@ -1,11 +1,12 @@
 {
-  "name": "parsec-lib",
+  "name": "leap-core",
   "version": "0.18.2",
   "description": "transaction and block implementation",
   "main": "dist/index.js",
   "keywords": [
-    "parsec",
+    "leap",
     "plasma",
+    "scaling",
     "ethereum"
   ],
   "files": [
@@ -36,7 +37,7 @@
       "dist"
     ]
   },
-  "author": "Parsec Labs",
+  "author": "Leap DAO",
   "license": "AGPLv3",
   "devDependencies": {
     "babel-cli": "^6.11.4",
