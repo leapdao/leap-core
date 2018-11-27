@@ -40,8 +40,11 @@
   "author": "Leap DAO",
   "license": "AGPLv3",
   "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
     "babel-cli": "^6.11.4",
     "babel-core": "^6.10.4",
+    "babel-loader": "^8.0.4",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-array-includes": "^2.0.3",
     "babel-preset-es2015": "^6.5.0",

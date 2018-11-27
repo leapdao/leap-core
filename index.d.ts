@@ -8,7 +8,7 @@
 
 declare module "leap-core" {
   import Web3 from 'web3';
-  import { Callback } from 'web3/types.d';
+  import { Callback } from 'web3/types';
 
   export enum Type {
     DEPOSIT = 2,
@@ -155,7 +155,12 @@ declare module "leap-core" {
     public static fromRaw(transaction: Buffer | string): Tx<any>;
     static sigDataStatic(type: Type, raw: Buffer, inputsLength: number): Buffer;
     static parseToParams(transaction: Tx<any>): string[];
-    static signMessageWithWeb3(web3: Web3, message: string): Promise<Tx<TxType>>;
+    static signMessageWithWeb3(web3: Web3, message: string): Promise<{
+      r: string;
+      s: string;
+      v: number;
+      signer: string;
+    }>;
 
     public getSize(): number;
     public recoverTxSigner(): void;
