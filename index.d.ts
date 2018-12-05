@@ -256,7 +256,9 @@ declare module "leap-core" {
     },
     network: string;
     rootNetwork: string;
-    exitHandlerAddr?: string;
+    exitHandlerAddr: string;
+    bridgeAddr: string;
+    operatorAddr: string;
   };
 
   class ExtendedWeb3 extends Web3 {
