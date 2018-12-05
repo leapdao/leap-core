@@ -256,8 +256,6 @@ declare module "leap-core" {
     },
     network: string;
     rootNetwork: string;
-    bridgeAddr: string;
-    operatorAddr?: string;
     exitHandlerAddr?: string;
   };
 
