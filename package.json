@@ -37,6 +37,15 @@
       "dist"
     ]
   },
+  "prettier": {
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true
+  },
   "author": "Leap DAO",
   "license": "AGPLv3",
   "devDependencies": {
@@ -44,6 +53,7 @@
     "@babel/preset-env": "^7.1.6",
     "babel-cli": "^6.11.4",
     "babel-core": "^6.10.4",
+    "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-array-includes": "^2.0.3",
@@ -53,9 +63,11 @@
     "chai": "^3.5.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-import": "^2.2.0",
     "mocha": "^3.0.0-1",
     "nyc": "^11.2.1",
+    "prettier": "^1.15.3",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "truffle-hdwallet-provider": "github:0xProject/truffle-hdwallet-provider",
