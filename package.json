@@ -3,6 +3,7 @@
   "version": "0.19.4",
   "description": "transaction and block implementation",
   "main": "dist/index.js",
+  "types": "./index.d.ts",
   "keywords": [
     "leap",
     "plasma",
