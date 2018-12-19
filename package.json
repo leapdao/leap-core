@@ -38,7 +38,7 @@
     ]
   },
   "author": "Leap DAO",
-  "license": "AGPLv3",
+  "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@babel/preset-env": "^7.1.6",
