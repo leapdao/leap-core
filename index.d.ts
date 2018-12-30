@@ -124,6 +124,7 @@ declare module "leap-core" {
 
   export interface LeapTransaction extends Transaction {
     raw: string;
+    color: number;
   }
 
   export type TxOptions = {
