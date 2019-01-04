@@ -9,6 +9,7 @@
 declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types';
+  import { Transaction } from 'web3/Eth/types';
 
   export enum Type {
     DEPOSIT = 2,
@@ -114,6 +115,16 @@ declare module "leap-core" {
     public static fromRaw(buf: Buffer, offset: number, sigHashBuf: Buffer): Input;
 
     public static recoverSignerAddress(sigHashBuf: Buffer, v: number, r: Buffer, s: Buffer): string;
+  }
+
+  export type InputTx = { 
+    index: number;
+    tx: LeapTransaction;
+  };
+
+  export interface LeapTransaction extends Transaction {
+    raw: string;
+    color: number;
   }
 
   export type TxOptions = {
@@ -222,7 +233,9 @@ declare module "leap-core" {
     public toRaw(): Buffer;
     public static fromRaw(raw: Buffer): Block;
 
-    public proof(tx: Tx<any>, proofOffset: number): string[];
+    public proof(tx: Tx<any>, proofOffset: number): Proof;
+
+    public static from(height: number, timestamp: number, txList: LeapTransaction[]): Block;
   }
 
   class Period {
@@ -230,8 +243,12 @@ declare module "leap-core" {
     addBlock(block: Block): Period;
     getMerkleTree(): MerkleTree;
     merkleRoot(): string;
-    proof(tx: Tx<any>): string[];
+    proof(tx: Tx<any>): Proof;
+    static periodForBlockRange(plasma: ExtendedWeb3, startBlock: number, endBlock: number): Promise<Period>;
+    static periodForTx(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Period>;
   }
+
+  export type Proof = string[];
 
   export type Unspent = {
     outpoint: Outpoint;
@@ -274,5 +291,9 @@ declare module "leap-core" {
     export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number, color): Array<Output>;
 
     export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
+    export function periodBlockRange(blockNumber: number): Array<number>[2];
+    export function getTxWithYoungestBlock(txs: LeapTransaction[]): InputTx;
+    export function getYoungestInputTx(plasma: ExtendedWeb3, tx: Tx<any>): Promise<InputTx>;
+    export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Proof>;
   }
 }
