@@ -16,19 +16,19 @@
     "README.md"
   ],
   "scripts": {
-    "lint": "npm run lint:js",
+    "lint": "yarn lint:js",
     "lint:eslint": "eslint --fix --ignore-path .gitignore --ignore-pattern internals/scripts --ignore-pattern dist",
-    "lint:js": "npm run lint:eslint -- . ",
+    "lint:js": "yarn lint:eslint . ",
     "check-coverage": "nyc check-coverage --statements 50 --branches 50 --functions 50 --lines 50",
     "test": "mocha lib/*.spec.js --compilers js:babel-register",
-    "cover": "nyc --reporter=lcov npm t",
+    "cover": "nyc --reporter=lcov yarn test",
     "prebuild": "rm -rf dist",
     "build": "babel --out-dir dist --ignore *.spec.js lib",
-    "prepublish": "npm run prebuild && npm run build"
+    "prepublish": "yarn prebuild && yarn build"
   },
   "config": {
     "ghooks": {
-      "pre-commit": "npm run cover && npm run check-coverage"
+      "pre-commit": "yarn cover && yarn check-coverage"
     }
   },
   "nyc": {
