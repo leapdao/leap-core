@@ -3,13 +3,13 @@
 
 test:
 ```
-npm install
-npm test
+yarn
+yarn test
 ```
 
 install:
 ```
-npm i -S leap-core
+yarn add -S leap-core
 ```
 
 ## Create Transaction Proof:
