@@ -296,4 +296,12 @@ declare module "leap-core" {
     export function getYoungestInputTx(plasma: ExtendedWeb3, tx: Tx<any>): Promise<InputTx>;
     export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Proof>;
   }
+
+  class Exit {
+    static signOverExit(utxoId: string, amount: number, privKey: string): Buffer;
+    static sigHashBuff(utxoId: string, amount: number): Buffer;
+    static bufferToBytes32Array(buffer: Buffer): Array<string>;
+    static txFromProof(proof: Proof): Tx<any>;
+    static parseTxDataFromProof(proof: Proof): Buffer;
+  }
 }
