@@ -9,7 +9,7 @@
 declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types';
-  import { Transaction } from 'web3/Eth/types';
+  import { Transaction } from 'web3/eth/types';
 
   export enum Type {
     DEPOSIT = 2,
