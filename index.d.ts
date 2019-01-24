@@ -117,7 +117,7 @@ declare module "leap-core" {
     public static recoverSignerAddress(sigHashBuf: Buffer, v: number, r: Buffer, s: Buffer): string;
   }
 
-  export type InputTx = { 
+  export type InputTx = {
     index: number;
     tx: LeapTransaction;
   };
@@ -278,12 +278,18 @@ declare module "leap-core" {
     operatorAddr: string;
   };
 
+  export type ValidatorInfo = {
+    ethAddress: string;
+    tendermintAddress: string;
+  }
+
   class ExtendedWeb3 extends Web3 {
     public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
     public getColor(tokenContractAddress: string, cb?: Callback<number>): Promise<number>;
     public getColors(cb?: Callback<string[]>): Promise<string[]>;
     public status(cb?: Callback<string>): Promise<string>;
     public getConfig(cb?: Callback<NodeConfig>): Promise<NodeConfig>;
+    public getValidatorInfo(cb?: Callback<ValidatorInfo>): Promise<ValidatorInfo>;
   }
 
   namespace helpers {
