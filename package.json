@@ -1,6 +1,6 @@
 {
   "name": "leap-core",
-  "version": "0.20.4",
+  "version": "0.20.5",
   "description": "transaction and block implementation",
   "main": "dist/index.js",
   "types": "./index.d.ts",
