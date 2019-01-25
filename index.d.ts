@@ -10,6 +10,7 @@ declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types';
   import { Transaction } from 'web3/eth/types';
+  import { BigInt } from 'jsbi';
 
   export enum Type {
     DEPOSIT = 2,
@@ -26,21 +27,21 @@ declare module "leap-core" {
   }
 
   export type TransferOutputObject = {
-    value: number;
+    value: BigInt;
     address: string;
     storageRoot?: string;
   };
 
   export type OutputJSON = {
-    value: number | string;
+    value: string;
     address: string;
     color: number;
     storageRoot?: string;
   };
 
   export class Output {
-    constructor(valueOrObject: number | string | TransferOutputObject, address?: string, color?: number);
-    public value: number | string;
+    constructor(valueOrObject: BigInt | number | string | TransferOutputObject, address?: string, color?: number);
+    public value: BigInt;
     public address: string;
     public color: number;
     public storageRoot?: string;
@@ -303,8 +304,8 @@ declare module "leap-core" {
   }
 
   class Exit {
-    static signOverExit(utxoId: string, amount: number, privKey: string): Buffer;
-    static sigHashBuff(utxoId: string, amount: number): Buffer;
+    static signOverExit(utxoId: string, amount: BigInt, privKey: string): Buffer;
+    static sigHashBuff(utxoId: string, amount: BigInt): Buffer;
     static bufferToBytes32Array(buffer: Buffer): Array<string>;
     static txFromProof(proof: Proof): Tx<any>;
     static parseTxDataFromProof(proof: Proof): Buffer;
