@@ -10,7 +10,8 @@ declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types';
   import { Transaction } from 'web3/eth/types';
-  import { BigInt } from 'jsbi';
+  import JSBI from 'jsbi';
+  type BigInt = JSBI;
 
   export enum Type {
     DEPOSIT = 2,
