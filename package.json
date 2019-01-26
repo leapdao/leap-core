@@ -79,6 +79,6 @@
     "babel-polyfill": "^6.26.0",
     "ethereumjs-util": "^6.0.0",
     "fast-equals": "^1.5.0",
-    "jsbi": "^2.0.5"
+    "jsbi-utils": "^1.0.0"
   }
 }
