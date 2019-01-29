@@ -75,7 +75,7 @@
     "utf8": "^2.1.2"
   },
   "dependencies": {
-    "@types/web3": "^1.0.12",
+    "@types/web3": "^1.0.18",
     "babel-polyfill": "^6.26.0",
     "ethereumjs-util": "^6.0.0",
     "fast-equals": "^1.5.0",
