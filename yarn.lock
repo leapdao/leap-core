@@ -2815,6 +2815,13 @@ js-yaml@^3.5.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
+jsbi-utils@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/jsbi-utils/-/jsbi-utils-1.0.0.tgz#c0ce72ad42d2673a9bbc86d21cf5f3c1535af9bc"
+  integrity sha512-LuPoNHYtdmxsAxPNOxPjI4RPm+9aMNEje9rDpHoiAZDokLwfbMufP5GKdvGihiE93q2DAWs9KEmDAwMQLI8EWA==
+  dependencies:
+    jsbi "^2.0.5"
+
 jsbi@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-2.0.5.tgz#82589011da87dc59b4b549d94dcef51a9155f6fe"

@@ -10,7 +10,8 @@ declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types';
   import { Transaction } from 'web3/eth/types';
-
+  import { BigIntType } from 'jsbi-utils';
+  
   export enum Type {
     DEPOSIT = 2,
     TRANSFER = 3,
@@ -26,21 +27,21 @@ declare module "leap-core" {
   }
 
   export type TransferOutputObject = {
-    value: number;
+    value: BigIntType;
     address: string;
     storageRoot?: string;
   };
 
   export type OutputJSON = {
-    value: number | string;
+    value: string;
     address: string;
     color: number;
     storageRoot?: string;
   };
 
   export class Output {
-    constructor(valueOrObject: number | string | TransferOutputObject, address?: string, color?: number);
-    public value: number | string;
+    constructor(valueOrObject: BigIntType | number | string | TransferOutputObject, address?: string, color?: number);
+    public value: BigIntType;
     public address: string;
     public color: number;
     public storageRoot?: string;
@@ -292,8 +293,8 @@ declare module "leap-core" {
   }
 
   namespace helpers {
-    export function calcInputs(unspent: Array<Unspent>, from: string, amount: number, color: number): Array<Input>;
-    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: number, color): Array<Output>;
+    export function calcInputs(unspent: Array<Unspent>, from: string, amount: BigIntType, color: number): Array<Input>;
+    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigIntType, color): Array<Output>;
 
     export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
     export function periodBlockRange(blockNumber: number): Array<number>[2];
@@ -303,8 +304,8 @@ declare module "leap-core" {
   }
 
   class Exit {
-    static signOverExit(utxoId: string, amount: number, privKey: string): Buffer;
-    static sigHashBuff(utxoId: string, amount: number): Buffer;
+    static signOverExit(utxoId: string, amount: BigIntType | number, privKey: string): Buffer;
+    static sigHashBuff(utxoId: string, amount: BigIntType | number): Buffer;
     static bufferToBytes32Array(buffer: Buffer): Array<string>;
     static txFromProof(proof: Proof): Tx<any>;
     static parseTxDataFromProof(proof: Proof): Buffer;
