@@ -295,12 +295,11 @@ declare module "leap-core" {
   namespace helpers {
     export function calcInputs(unspent: Array<Unspent>, from: string, amount: BigIntType, color: number): Array<Input>;
     export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigIntType, color): Array<Output>;
-
     export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
     export function periodBlockRange(blockNumber: number): Array<number>[2];
     export function getTxWithYoungestBlock(txs: LeapTransaction[]): InputTx;
     export function getYoungestInputTx(plasma: ExtendedWeb3, tx: Tx<any>): Promise<InputTx>;
-    export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Proof>;
+    export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction, slotId: number, validatorAddr: string): Promise<Proof>;
   }
 
   class Exit {
