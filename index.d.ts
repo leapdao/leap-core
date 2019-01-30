@@ -72,6 +72,7 @@ declare module "leap-core" {
     public getUtxoId(): string;
     public toRaw(buf?: Buffer, offset?: number): Buffer;
     public hex(): string;
+    public toJSON(): OutpointJSON;
 
     public static isOutpoint(obj: any): boolean;
     public static fromRaw(raw: string | Buffer, offset?: number): Outpoint;
@@ -252,6 +253,11 @@ declare module "leap-core" {
 
   export type Unspent = {
     outpoint: Outpoint;
+    output: OutputJSON;
+  };
+
+  export type UnspentJSON = {
+    outpoint: OutpointJSON;
     output: OutputJSON;
   };
 
