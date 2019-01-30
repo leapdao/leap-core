@@ -78,7 +78,6 @@
     "@types/web3": "^1.0.18",
     "babel-polyfill": "^6.26.0",
     "ethereumjs-util": "^6.0.0",
-    "fast-equals": "^1.5.0",
     "jsbi-utils": "^1.0.0"
   }
 }
