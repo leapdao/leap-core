@@ -15,7 +15,6 @@ declare module "leap-core" {
   export enum Type {
     DEPOSIT = 2,
     TRANSFER = 3,
-    CONSOLIDATE = 4,
     // COMP_REQ = 5,
     // COMP_RESP = 6,
     EXIT = 7,
@@ -103,7 +102,6 @@ declare module "leap-core" {
 
     public setSigner(signer: string): void;
     public isComputation(): boolean;
-    public isConsolidation(): boolean;
     public isDeposit(): boolean;
     public isSpend(): boolean;
     public getSize(): number;
@@ -155,7 +153,6 @@ declare module "leap-core" {
     public static epochLength(epochLength: number): Tx<Type.EPOCH_LENGTH>;
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
-    public static consolidate(inputs: Array<Input>, output: Output): Tx<Type.CONSOLIDATE>;
     public static spendCond(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.SPEND_COND>;
 
     public static fromJSON<TxType extends Type>(o: {
