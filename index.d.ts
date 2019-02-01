@@ -279,6 +279,8 @@ declare module "leap-core" {
     exitHandlerAddr: string;
     bridgeAddr: string;
     operatorAddr: string;
+    bridgeDelay: number;
+    eventsDelay: number;
   };
 
   export type ValidatorInfo = {
