@@ -17,6 +17,9 @@ export default (accounts, keys) => ({
   version: '1',
   currentProvider: {},
   eth: {
+    personal: {
+      sign: fakeSign(keys)
+    },
     sign: fakeSign(keys),
     getAccounts: cb => cb(null, accounts),
   },
