@@ -8,7 +8,9 @@
       "no-param-reassign": ["error", { "props": false }],
       "no-restricted-syntax": 0,
       "arrow-body-style": 0,
-      "no-plusplus": 0
+      "no-plusplus": 0,
+      "class-methods-use-this": 0,
+      "no-useless-constructor": 0
     },
     "env": {
       "browser": true,
