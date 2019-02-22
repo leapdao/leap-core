@@ -290,6 +290,7 @@ declare module "leap-core" {
 
   class ExtendedWeb3 extends Web3 {
     public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
+    public getUnspentAll(cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
     public getColor(tokenContractAddress: string, cb?: Callback<number>): Promise<number>;
     public getColors(cb?: Callback<string[]>): Promise<string[]>;
     public status(cb?: Callback<string>): Promise<string>;
