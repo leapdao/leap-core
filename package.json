@@ -72,7 +72,9 @@
   "dependencies": {
     "@types/web3": "^1.0.18",
     "ethereumjs-util": "6.0.0",
-    "jsbi-utils": "^1.0.0",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "ethereumjs-tx": "1.3.7",
+    "ethereumjs-vm": "2.6.0",
+    "jsbi-utils": "^1.0.0"
   }
 }
