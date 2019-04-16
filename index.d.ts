@@ -315,5 +315,20 @@ declare module "leap-core" {
     static bufferToBytes32Array(buffer: Buffer): Array<string>;
     static txFromProof(proof: Proof): Tx<any>;
     static parseTxDataFromProof(proof: Proof): Buffer;
+    static fastSellAmount(
+      account: string, 
+      amount: BigIntType | number, 
+      color: number, 
+      plasmaChain: ExtendedWeb3,
+      rootChain: ExtendedWeb3,
+      marketMakerUrl: string
+    ): Promise<any>;
+
+    static fastSellUTXO(
+      utxo: Unspent, 
+      plasmaChain: ExtendedWeb3,
+      rootChain: ExtendedWeb3,
+      marketMakerUrl: string
+    ): Promise<any>;
   }
 }
