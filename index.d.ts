@@ -1,3 +1,5 @@
+import Transaction from './lib/transaction';
+
 /**
  * Copyright (c) 2018-present, Leap DAO (leapdao.org)
  *
@@ -289,6 +291,16 @@ declare module "leap-core" {
     tendermintAddress: string;
   }
 
+  export type Signer = {
+    signTx: (tx: Transaction) => Promise<Tx<TxType>>;
+    signMessage: (message: string) => Promise<{
+      r: string;
+      s: string;
+      v: number;
+      signer: string;
+    }>;
+  }
+
   class ExtendedWeb3 extends Web3 {
     public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
     public getUnspentAll(cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
@@ -321,14 +333,16 @@ declare module "leap-core" {
       color: number, 
       plasmaChain: ExtendedWeb3,
       rootChain: ExtendedWeb3,
-      marketMakerUrl: string
+      marketMakerUrl: string,
+      signer: Signer,
     ): Promise<any>;
 
     static fastSellUTXO(
       utxo: Unspent, 
       plasmaChain: ExtendedWeb3,
       rootChain: ExtendedWeb3,
-      marketMakerUrl: string
+      marketMakerUrl: string,
+      signer: Signer,
     ): Promise<any>;
   }
 }
