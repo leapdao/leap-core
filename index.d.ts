@@ -289,6 +289,16 @@ declare module "leap-core" {
     tendermintAddress: string;
   }
 
+  export type Signer = {
+    signTx: <TxType extends Type>(tx: Tx<TxType>) => Promise<Tx<TxType>>;
+    signMessage: (message: string) => Promise<{
+      r: string;
+      s: string;
+      v: number;
+      signer: string;
+    }>;
+  }
+
   class ExtendedWeb3 extends Web3 {
     public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
     public getUnspentAll(cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
@@ -315,5 +325,22 @@ declare module "leap-core" {
     static bufferToBytes32Array(buffer: Buffer): Array<string>;
     static txFromProof(proof: Proof): Tx<any>;
     static parseTxDataFromProof(proof: Proof): Buffer;
+    static fastSellAmount(
+      account: string, 
+      amount: BigIntType | number, 
+      color: number, 
+      plasmaChain: ExtendedWeb3,
+      rootChain: ExtendedWeb3,
+      marketMakerUrl: string,
+      signer: Signer,
+    ): Promise<any>;
+
+    static fastSellUTXO(
+      utxo: Unspent, 
+      plasmaChain: ExtendedWeb3,
+      rootChain: ExtendedWeb3,
+      marketMakerUrl: string,
+      signer: Signer,
+    ): Promise<any>;
   }
 }
