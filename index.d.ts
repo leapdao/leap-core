@@ -292,7 +292,7 @@ declare module "leap-core" {
   }
 
   export type Signer = {
-    signTx: (tx: Transaction) => Promise<Tx<TxType>>;
+    signTx: (tx: Transaction) => Promise<Tx<any>>;
     signMessage: (message: string) => Promise<{
       r: string;
       s: string;
