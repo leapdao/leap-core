@@ -1,6 +1,6 @@
 {
   "name": "leap-core",
-  "version": "0.28.4",
+  "version": "0.29.0",
   "description": "transaction and block implementation",
   "main": "dist/index.js",
   "types": "./index.d.ts",
@@ -80,6 +80,7 @@
     "ethereumjs-util": "6.0.0",
     "ethereumjs-tx": "1.3.7",
     "ethereumjs-vm": "2.6.0",
-    "jsbi-utils": "^1.0.0"
+    "jsbi-utils": "^1.0.0",
+    "node-fetch": "^2.3.0"
   }
 }
