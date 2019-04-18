@@ -1,5 +1,3 @@
-import Transaction from './lib/transaction';
-
 /**
  * Copyright (c) 2018-present, Leap DAO (leapdao.org)
  *
@@ -292,7 +290,7 @@ declare module "leap-core" {
   }
 
   export type Signer = {
-    signTx: (tx: Transaction) => Promise<Tx<any>>;
+    signTx: <TxType extends Type>(tx: Tx<TxType>) => Promise<Tx<TxType>>;
     signMessage: (message: string) => Promise<{
       r: string;
       s: string;
