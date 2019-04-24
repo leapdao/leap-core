@@ -79,6 +79,7 @@
     "babel-polyfill": "^6.26.0",
     "ethereumjs-util": "6.0.0",
     "jsbi-utils": "^1.0.0",
+    "lodash": "^4.17.11",
     "node-fetch": "^2.3.0"
   }
 }
