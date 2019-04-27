@@ -20,10 +20,10 @@
     "lint:eslint": "eslint --fix --ignore-path .gitignore --ignore-pattern internals/scripts --ignore-pattern dist",
     "lint:js": "yarn lint:eslint . ",
     "check-coverage": "nyc check-coverage --statements 50 --branches 50 --functions 50 --lines 50",
-    "test": "mocha lib/*.spec.js --compilers js:babel-register",
+    "test": "mocha --require @babel/register lib/*.spec.js",
     "cover": "nyc --reporter=lcov yarn test",
     "prebuild": "rm -rf dist",
-    "build": "babel --out-dir dist lib && browserify -t [ babelify --presets [ @babel/preset-env ] ] browser.js -o dist/browser.js",
+    "build": "babel --ignore '**/*.spec.js' --out-dir dist lib && browserify -t [ babelify --presets [ @babel/preset-env ] ] browser.js -o dist/browser.js",
     "prepublish": "yarn prebuild && yarn build"
   },
   "config": {
@@ -53,6 +53,9 @@
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-add-module-exports": "^1.0.2",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
