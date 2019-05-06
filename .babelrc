@@ -5,8 +5,5 @@
         "node": "8.11",
       }
     }],
-  ],
-  "plugins": [
-    "add-module-exports"
   ]
 }

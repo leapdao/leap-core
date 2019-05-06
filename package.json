@@ -23,7 +23,7 @@
     "test": "mocha --require @babel/register lib/*.spec.js",
     "cover": "nyc --reporter=lcov yarn test",
     "prebuild": "rm -rf dist",
-    "build": "babel --ignore '**/*.spec.js' --out-dir dist lib && browserify -t [ babelify --presets [ @babel/preset-env ] ] browser.js -o dist/browser.js",
+    "build": "parcel build -t node --no-minify lib/index.js -o dist/index.js && parcel build -t browser --global LeapCore --no-minify lib/index.js -o dist/browser.js",
     "prepublish": "yarn prebuild && yarn build"
   },
   "config": {
@@ -50,14 +50,10 @@
   "author": "Leap DAO",
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/register": "^7.4.4",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-add-module-exports": "^1.0.2",
-    "babelify": "^10.0.0",
-    "browserify": "^16.2.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "eslint": "^3.19.0",
@@ -66,6 +62,7 @@
     "eslint-plugin-import": "^2.2.0",
     "mocha": "^5.2.0",
     "nyc": "^11.2.1",
+    "parcel-bundler": "^1.12.3",
     "prettier": "^1.15.3",
     "sinon": "^7.2.2",
     "sinon-chai": "^3.3.0",
@@ -73,7 +70,6 @@
   },
   "dependencies": {
     "@types/web3": "^1.0.18",
-    "babel-polyfill": "^6.26.0",
     "ethereumjs-util": "6.0.0",
     "jsbi-utils": "^1.0.0",
     "node-fetch": "^2.3.0"
