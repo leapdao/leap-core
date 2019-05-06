@@ -20,10 +20,10 @@
     "lint:eslint": "eslint --fix --ignore-path .gitignore --ignore-pattern internals/scripts --ignore-pattern dist",
     "lint:js": "yarn lint:eslint . ",
     "check-coverage": "nyc check-coverage --statements 50 --branches 50 --functions 50 --lines 50",
-    "test": "mocha --require @babel/register lib/*.spec.js",
+    "test": "mocha --require @babel/register --require @babel/polyfill lib/*.spec.js",
     "cover": "nyc --reporter=lcov yarn test",
     "prebuild": "rm -rf dist",
-    "build": "babel --ignore '**/*.spec.js' --out-dir dist lib && parcel build -t browser --global LeapCore lib/index.js -o dist/browser.min.js",
+    "build": "babel --ignore '**/*.spec.js' --out-dir dist lib && parcel build -t browser --global LeapCore lib/index.js -o dist/leap-core.min.js",
     "prepublish": "yarn prebuild && yarn build"
   },
   "config": {
@@ -52,6 +52,7 @@
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
+    "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/register": "^7.4.4",
     "babel-eslint": "^10.0.1",
