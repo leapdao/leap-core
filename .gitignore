@@ -4,6 +4,7 @@
 .nyc_output
 coverage/
 
+.cache
 .idea
 deploy.env
 event.json
