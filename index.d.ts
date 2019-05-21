@@ -317,6 +317,8 @@ declare module "leap-core" {
     export function getTxWithYoungestBlock(txs: LeapTransaction[]): InputTx;
     export function getYoungestInputTx(plasma: ExtendedWeb3, tx: Tx<any>): Promise<InputTx>;
     export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction, slotId: number, validatorAddr: string): Promise<Proof>;
+    // Depending on plasma instance, resolves to either Web3's Transaction or Ethers' TransactionReceipt
+    export function sendSignedTransaction(plasma: ExtendedWeb3, tx: string): Promise<any>;
   }
 
   class Exit {
