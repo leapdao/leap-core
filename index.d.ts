@@ -28,22 +28,27 @@ declare module "leap-core" {
   export type TransferOutputObject = {
     value: BigIntType;
     address: string;
-    storageRoot?: string;
+    data?: string;
   };
 
   export type OutputJSON = {
     value: string;
     address: string;
     color: number;
-    storageRoot?: string;
+    data?: string;
   };
 
   export class Output {
-    constructor(valueOrObject: BigIntType | number | string | TransferOutputObject, address?: string, color?: number);
+    constructor(
+      valueOrObject: BigIntType | number | string | TransferOutputObject,
+      address?: string,
+      color?: number,
+      data?: string
+    );
     public value: BigIntType;
     public address: string;
     public color: number;
-    public storageRoot?: string;
+    public data?: string;
 
     public isNFT(): boolean;
     public getSize(): number;
