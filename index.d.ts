@@ -11,7 +11,7 @@ declare module "leap-core" {
   import { Callback } from 'web3/types';
   import { Transaction } from 'web3/eth/types';
   import { BigIntType } from 'jsbi-utils';
-  
+
   export enum Type {
     DEPOSIT = 2,
     TRANSFER = 3,
@@ -304,6 +304,11 @@ declare module "leap-core" {
     }>;
   }
 
+  type SpendCondSimResult = {
+    error?: string;
+    outputs: Output[];
+  };
+
   class ExtendedWeb3 extends Web3 {
     public getUnspent(address: string, color: number, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
     public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
@@ -313,6 +318,7 @@ declare module "leap-core" {
     public status(cb?: Callback<string>): Promise<string>;
     public getConfig(cb?: Callback<NodeConfig>): Promise<NodeConfig>;
     public getValidatorInfo(cb?: Callback<ValidatorInfo>): Promise<ValidatorInfo>;
+    public checkSpendingCondition(tx: Transaction<Type.SPEND_COND>, cb?: Callback<SpendCondSimResult>): Promise<SpendCondSimResult>;
   }
 
   namespace helpers {
@@ -325,6 +331,7 @@ declare module "leap-core" {
     export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction, slotId: number, validatorAddr: string): Promise<Proof>;
     // Depending on plasma instance, resolves to either Web3's Transaction or Ethers' TransactionReceipt
     export function sendSignedTransaction(plasma: ExtendedWeb3, tx: string): Promise<any>;
+    export function simulateSpendCond(plasma: ExtendedWeb3, tx: Transaction<Type.SPEND_COND>): Promise<SpendCondSimResult>;
   }
 
   class Exit {
@@ -334,9 +341,9 @@ declare module "leap-core" {
     static txFromProof(proof: Proof): Tx<any>;
     static parseTxDataFromProof(proof: Proof): Buffer;
     static fastSellAmount(
-      account: string, 
-      amount: BigIntType | number, 
-      color: number, 
+      account: string,
+      amount: BigIntType | number,
+      color: number,
       plasmaChain: ExtendedWeb3,
       rootChain: ExtendedWeb3,
       marketMakerUrl: string,
@@ -344,7 +351,7 @@ declare module "leap-core" {
     ): Promise<any>;
 
     static fastSellUTXO(
-      utxo: Unspent, 
+      utxo: Unspent,
       plasmaChain: ExtendedWeb3,
       rootChain: ExtendedWeb3,
       marketMakerUrl: string,
