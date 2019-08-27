@@ -152,6 +152,10 @@ declare module "leap-core" {
     public outputs: Array<Output>;
     public options?: TxOptions;
 
+    public static calcInputs(unspent: Array<Unspent>, from: string, amount: BigIntType, color: number): Array<Input>;
+    public static calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigIntType, color): Array<Output>;
+    public static consolidateUTXOs(utxos: Unspent[]): Array<Tx<Type.TRANSFER>>;
+
     public static validatorJoin(slotId: number, tenderKey: string, eventsCount: number, signerAddr: string): Tx<Type.VALIDATOR_JOIN>;
     public static validatorLogout(slotId: number, tenderKey: string, eventsCount: number, activationEpoch: number, newSigner: string): Tx<Type.VALIDATOR_LOGOUT>;
     public static deposit(depositId: number, value: number, address: string, color: number): Tx<Type.DEPOSIT>;
@@ -159,6 +163,7 @@ declare module "leap-core" {
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
     public static spendCond(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.SPEND_COND>;
+    public static periodVote(slotId: number, input: Input): Tx<Type.PERIOD_VOTE>;
 
     public static fromJSON<TxType extends Type>(o: {
       type: TxType;
@@ -176,7 +181,11 @@ declare module "leap-core" {
       signer: string;
     }>;
 
+    public value(prevTx?: Tx<any>): { value: BigIntType, color: number };
+    public from(prevTx?: Tx<any>): string;
+    public to(): string;
     public getSize(): number;
+    public isSigned(): boolean;
     public recoverTxSigner(): void;
     public sigHashBuf(): Buffer;
     public sigHash(): string;
@@ -324,6 +333,7 @@ declare module "leap-core" {
   namespace helpers {
     export function calcInputs(unspent: Array<Unspent>, from: string, amount: BigIntType, color: number): Array<Input>;
     export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigIntType, color): Array<Output>;
+    export function consolidateUTXOs(utxos: Unspent[]): Array<Tx<Type.TRANSFER>>;
     export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
     export function periodBlockRange(blockNumber: number): Array<number>[2];
     export function getTxWithYoungestBlock(txs: LeapTransaction[]): InputTx;
@@ -331,7 +341,6 @@ declare module "leap-core" {
     export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction, slotId: number, validatorAddr: string): Promise<Proof>;
     // Depending on plasma instance, resolves to either Web3's Transaction or Ethers' TransactionReceipt
     export function sendSignedTransaction(plasma: ExtendedWeb3, tx: string): Promise<any>;
-    export function consolidateUTXOs(utxos: Unspent[]): Array<Tx<Type.TRANSFER>>;
     export function simulateSpendCond(plasma: ExtendedWeb3, tx: Transaction<Type.SPEND_COND>): Promise<SpendCondSimResult>;
   }
 
