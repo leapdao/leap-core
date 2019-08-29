@@ -318,6 +318,14 @@ declare module "leap-core" {
     outputs: Output[];
   };
 
+  type PeriodData = {
+    validatorAddress: string;
+    slotId: number;
+    casBitmap: string;
+    periodStart: number;
+    periodEnd: number;
+  };
+
   class ExtendedWeb3 extends Web3 {
     public getUnspent(address: string, color: number, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
     public getUnspent(address: string, cb?: Callback<Array<Unspent>>): Promise<Array<Unspent>>;
@@ -328,6 +336,7 @@ declare module "leap-core" {
     public getConfig(cb?: Callback<NodeConfig>): Promise<NodeConfig>;
     public getValidatorInfo(cb?: Callback<ValidatorInfo>): Promise<ValidatorInfo>;
     public checkSpendingCondition(tx: Transaction<Type.SPEND_COND>, cb?: Callback<SpendCondSimResult>): Promise<SpendCondSimResult>;
+    public getPeriodByBlockHeight(blockHeight: number): Promise<PeriodData>;
   }
 
   namespace helpers {
@@ -338,7 +347,7 @@ declare module "leap-core" {
     export function periodBlockRange(blockNumber: number): Array<number>[2];
     export function getTxWithYoungestBlock(txs: LeapTransaction[]): InputTx;
     export function getYoungestInputTx(plasma: ExtendedWeb3, tx: Tx<any>): Promise<InputTx>;
-    export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction, slotId: number, validatorAddr: string): Promise<Proof>;
+    export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Proof>;
     // Depending on plasma instance, resolves to either Web3's Transaction or Ethers' TransactionReceipt
     export function sendSignedTransaction(plasma: ExtendedWeb3, tx: string): Promise<any>;
     export function simulateSpendCond(plasma: ExtendedWeb3, tx: Transaction<Type.SPEND_COND>): Promise<SpendCondSimResult>;
