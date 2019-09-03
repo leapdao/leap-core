@@ -336,7 +336,7 @@ declare module "leap-core" {
     public status(cb?: Callback<string>): Promise<string>;
     public getConfig(cb?: Callback<NodeConfig>): Promise<NodeConfig>;
     public getValidatorInfo(cb?: Callback<ValidatorInfo>): Promise<ValidatorInfo>;
-    public checkSpendingCondition(tx: Transaction<Type.SPEND_COND>, cb?: Callback<SpendCondSimResult>): Promise<SpendCondSimResult>;
+    public checkSpendingCondition(tx: Tx<Type.SPEND_COND>, cb?: Callback<SpendCondSimResult>): Promise<SpendCondSimResult>;
     public getPeriodByBlockHeight(blockHeight: number): Promise<PeriodData>;
   }
 
@@ -351,7 +351,7 @@ declare module "leap-core" {
     export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Proof>;
     // Depending on plasma instance, resolves to either Web3's Transaction or Ethers' TransactionReceipt
     export function sendSignedTransaction(plasma: ExtendedWeb3, tx: string): Promise<any>;
-    export function simulateSpendCond(plasma: ExtendedWeb3, tx: Transaction<Type.SPEND_COND>): Promise<SpendCondSimResult>;
+    export function simulateSpendCond(plasma: ExtendedWeb3, tx: Tx<Type.SPEND_COND>): Promise<SpendCondSimResult>;
   }
 
   class Exit {
