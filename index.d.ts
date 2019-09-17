@@ -256,6 +256,7 @@ declare module "leap-core" {
     getMerkleTree(): MerkleTree;
     merkleRoot(): string;
     proof(tx: Tx<any>): Proof;
+    static periodBlockRange(blockNumber: number): Array<number>[2];
     static periodForBlockRange(plasma: ExtendedWeb3, startBlock: number, endBlock: number): Promise<Period>;
     static periodForTx(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Period>;
   }
