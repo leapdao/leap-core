@@ -256,7 +256,7 @@ declare module "leap-core" {
     getMerkleTree(): MerkleTree;
     merkleRoot(): string;
     proof(tx: Tx<any>): Proof;
-    static periodBlockRange(blockNumber: number): Array<number>[2];
+    static periodBlockRange(blockNumber: number): [number, number];
     static periodForBlockRange(plasma: ExtendedWeb3, startBlock: number, endBlock: number): Promise<Period>;
     static periodForTx(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Period>;
   }
@@ -346,7 +346,7 @@ declare module "leap-core" {
     export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigIntType, color): Array<Output>;
     export function consolidateUTXOs(utxos: Unspent[]): Array<Tx<Type.TRANSFER>>;
     export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
-    export function periodBlockRange(blockNumber: number): Array<number>[2];
+    export function periodBlockRange(blockNumber: number): [number, number];
     export function getTxWithYoungestBlock(txs: LeapTransaction[]): InputTx;
     export function getYoungestInputTx(plasma: ExtendedWeb3, tx: Tx<any>): Promise<InputTx>;
     export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Proof>;
