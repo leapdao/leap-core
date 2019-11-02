@@ -21,8 +21,10 @@ declare module "leap-core" {
     VALIDATOR_JOIN = 8,
     VALIDATOR_LOGOUT = 9,
     PERIOD_VOTE = 11,
-    EPOCH_LENGTH = 12,
+    EPOCH_LENGTH_V1 = 12,
     SPEND_COND = 13,
+    MIN_GAS_PRICE = 14,
+    EPOCH_LENGTH_V2 = 15,
   }
 
   export type TransferOutputObject = {
@@ -159,7 +161,8 @@ declare module "leap-core" {
     public static validatorJoin(slotId: number, tenderKey: string, eventsCount: number, signerAddr: string): Tx<Type.VALIDATOR_JOIN>;
     public static validatorLogout(slotId: number, tenderKey: string, eventsCount: number, activationEpoch: number, newSigner: string): Tx<Type.VALIDATOR_LOGOUT>;
     public static deposit(depositId: number, value: number, address: string, color: number): Tx<Type.DEPOSIT>;
-    public static epochLength(epochLength: number): Tx<Type.EPOCH_LENGTH>;
+    public static epochLengthV1(epochLength: number): Tx<Type.EPOCH_LENGTH_V1>;
+    public static epochLength(epochLength: number, blockNumber: number): Tx<Type.EPOCH_LENGTH_V2>;
     public static exit(input: Input): Tx<Type.EXIT>;
     public static transfer(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.TRANSFER>;
     public static spendCond(inputs: Array<Input>, outputs: Array<Output>): Tx<Type.SPEND_COND>;
