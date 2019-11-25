@@ -9,7 +9,8 @@
 declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types';
-  import { Transaction, PromiEvent } from 'web3/eth/types';
+  import { Transaction } from 'web3/eth/types';
+  import PromiEvent from 'web3/promiEvent';
   import { BigIntType } from 'jsbi-utils';
 
   export enum Type {
