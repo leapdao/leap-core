@@ -73,6 +73,7 @@
     "@types/web3": "^1.0.18",
     "ethereumjs-util": "6.0.0",
     "jsbi-utils": "^1.0.0",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "web3-core-promievent": "^1.2.4"
   }
 }

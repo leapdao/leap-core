@@ -10,6 +10,7 @@ declare module "leap-core" {
   import Web3 from 'web3';
   import { Callback } from 'web3/types';
   import { Transaction } from 'web3/eth/types';
+  import PromiEvent from 'web3/promiEvent';
   import { BigIntType } from 'jsbi-utils';
 
   export enum Type {
@@ -317,6 +318,13 @@ declare module "leap-core" {
     }>;
   }
 
+  export type FastSellRequest = {
+    tx: Transaction;
+    sigHashBuff: Buffer;
+    effectiveBlock: number;
+    signedData?: Array<string>;
+  };
+
   type SpendCondSimResult = {
     error?: string;
     outputs: Output[];
@@ -369,17 +377,24 @@ declare module "leap-core" {
       amount: BigIntType | number,
       color: number,
       plasmaChain: ExtendedWeb3,
-      rootChain: ExtendedWeb3,
+      rootChain: Web3,
       marketMakerUrl: string,
-      signer: Signer,
-    ): Promise<any>;
+      signer?: Signer,
+    ): PromiEvent<any>;
 
     static fastSellUTXO(
       utxo: Unspent,
       plasmaChain: ExtendedWeb3,
-      rootChain: ExtendedWeb3,
+      rootChain: Web3,
       marketMakerUrl: string,
-      signer: Signer,
-    ): Promise<any>;
+      signer?: Signer,
+    ): PromiEvent<any>;
+
+    static signAndSendFastSellRequest(
+      fastSellRequest: FastSellRequest,
+      rootChain: Web3,
+      marketMakerUrl: string,
+      signer?: Signer,
+    ): PromiEvent<any>;
   }
 }
