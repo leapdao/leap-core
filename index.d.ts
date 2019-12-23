@@ -254,15 +254,24 @@ declare module "leap-core" {
     public static from(height: number, timestamp: number, txList: LeapTransaction[]): Block;
   }
 
+  type PeriodOptions = {
+    validatorData?: {
+      slotId: number;
+      ownerAddr: string | Buffer | number;
+      casBitmap?: string | Buffer | number; 
+    };
+    excludePrevHashFromProof?: Boolean;
+  };
+
   class Period {
-    constructor(prevHash: string, blocks: Array<Block>);
+    constructor(prevHash: string, blocks: Array<Block>, opts?: PeriodOptions);
     addBlock(block: Block): Period;
     getMerkleTree(): MerkleTree;
     merkleRoot(): string;
     proof(tx: Tx<any>): Proof;
     static periodBlockRange(blockNumber: number): [number, number];
-    static periodForBlockRange(plasma: ExtendedWeb3, startBlock: number, endBlock: number): Promise<Period>;
-    static periodForTx(plasma: ExtendedWeb3, tx: LeapTransaction): Promise<Period>;
+    static periodForBlockRange(plasma: ExtendedWeb3, startBlock: number, endBlock: number, periodOpts?: PeriodOptions): Promise<Period>;
+    static periodForTx(plasma: ExtendedWeb3, tx: LeapTransaction, periodOpts?: PeriodOptions): Promise<Period>;
   }
 
   export type Proof = string[];
@@ -331,7 +340,7 @@ declare module "leap-core" {
   };
 
   type PeriodData = {
-    validatorAddress: string;
+    ownerAddr: string;
     slotId: number;
     casBitmap?: string;
     periodStart?: number;
@@ -360,7 +369,7 @@ declare module "leap-core" {
     export function periodBlockRange(blockNumber: number): [number, number];
     export function getTxWithYoungestBlock(txs: LeapTransaction[]): InputTx;
     export function getYoungestInputTx(plasma: ExtendedWeb3, tx: Tx<any>): Promise<InputTx>;
-    export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction, fallbackPeriodData?: PeriodData): Promise<Proof>;
+    export function getProof(plasma: ExtendedWeb3, tx: LeapTransaction, periodOpts?: PeriodOptions): Promise<Proof>;
     // Depending on plasma instance, resolves to either Web3's Transaction or Ethers' TransactionReceipt
     export function sendSignedTransaction(plasma: ExtendedWeb3, tx: string): Promise<any>;
     export function simulateSpendCond(plasma: ExtendedWeb3, tx: Tx<Type.SPEND_COND>): Promise<SpendCondSimResult>;
