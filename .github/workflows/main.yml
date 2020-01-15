@@ -9,6 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - run: npm install
     - name: lint
       run: npm run lint
     - name: tests
