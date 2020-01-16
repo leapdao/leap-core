@@ -13,7 +13,7 @@ jobs:
     - name: lint
       run: npm run lint
     - name: tests
-      run: nyc --reporter=lcov npm test
+      run: ./node_modules/.bin/nyc --reporter=lcov npm test
     - name: upload coverage report
       uses: codecov/codecov-action@v1.0.5
       with:
