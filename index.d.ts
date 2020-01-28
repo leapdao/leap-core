@@ -257,7 +257,7 @@ declare module "leap-core" {
   type PeriodOptions = {
     validatorData?: {
       slotId: number;
-      ownerAddr: string | Buffer | number;
+      validatorAddress: string | Buffer | number;
       casBitmap?: string | Buffer | number; 
     };
     excludePrevHashFromProof?: Boolean;
@@ -340,7 +340,7 @@ declare module "leap-core" {
   };
 
   type PeriodData = {
-    ownerAddr: string;
+    validatorAddress: string;
     slotId: number;
     casBitmap?: string;
     periodStart?: number;
