@@ -17,5 +17,8 @@
     },
     "parserOptions": {
       "ecmaVersion": 6
+    },
+    "globals": {
+      "BigInt": true
     }
   }

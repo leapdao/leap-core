@@ -1,6 +1,6 @@
 {
   "name": "leap-core",
-  "version": "2.0.0",
+  "version": "3.0.0-beta.0",
   "description": "transaction and block implementation",
   "main": "dist/index.js",
   "types": "./index.d.ts",
@@ -50,30 +50,33 @@
   "author": "Leap DAO",
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/register": "^7.4.4",
-    "babel-eslint": "^10.0.2",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-syntax-bigint": "^7.8.3",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/register": "^7.8.3",
+    "babel-eslint": "^10.0.3",
     "babel-plugin-add-module-exports": "^1.0.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-import": "^2.18.2",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
-    "parcel-bundler": "^1.12.3",
+    "parcel-bundler": "^1.12.4",
     "prettier": "^1.18.2",
     "utf8": "^2.1.2"
   },
   "dependencies": {
     "@types/web3": "^1.0.18",
     "ethereumjs-util": "6.0.0",
-    "jsbi-utils": "^1.0.0",
     "node-fetch": "^2.3.0",
     "web3-core-promievent": "^1.2.4"
+  },
+  "resolutions": {
+    "parcel-bundler/**/terser": "4.1.0"
   }
 }

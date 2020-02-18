@@ -11,7 +11,6 @@ declare module "leap-core" {
   import { Callback } from 'web3/types';
   import { Transaction } from 'web3/eth/types';
   import PromiEvent from 'web3/promiEvent';
-  import { BigIntType } from 'jsbi-utils';
 
   export enum Type {
     DEPOSIT = 2,
@@ -29,7 +28,7 @@ declare module "leap-core" {
   }
 
   export type TransferOutputObject = {
-    value: BigIntType;
+    value: BigInt;
     address: string;
     data?: string;
   };
@@ -43,12 +42,12 @@ declare module "leap-core" {
 
   export class Output {
     constructor(
-      valueOrObject: BigIntType | number | string | TransferOutputObject,
+      valueOrObject: BigInt | number | string | TransferOutputObject,
       address?: string,
       color?: number,
       data?: string
     );
-    public value: BigIntType;
+    public value: BigInt;
     public address: string;
     public color: number;
     public data?: string;
@@ -155,8 +154,8 @@ declare module "leap-core" {
     public outputs: Array<Output>;
     public options?: TxOptions;
 
-    public static calcInputs(unspent: Array<Unspent>, from: string, amount: BigIntType, color: number): Array<Input>;
-    public static calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigIntType, color): Array<Output>;
+    public static calcInputs(unspent: Array<Unspent>, from: string, amount: BigInt, color: number): Array<Input>;
+    public static calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigInt, color): Array<Output>;
     public static consolidateUTXOs(utxos: Unspent[]): Array<Tx<Type.TRANSFER>>;
 
     public static validatorJoin(slotId: number, tenderKey: string, eventsCount: number, signerAddr: string): Tx<Type.VALIDATOR_JOIN>;
@@ -185,7 +184,7 @@ declare module "leap-core" {
       signer: string;
     }>;
 
-    public value(prevTx?: Tx<any>): { value: BigIntType, color: number };
+    public value(prevTx?: Tx<any>): { value: BigInt, color: number };
     public from(prevTx?: Tx<any>): string;
     public to(): string;
     public getSize(): number;
@@ -362,8 +361,8 @@ declare module "leap-core" {
   }
 
   namespace helpers {
-    export function calcInputs(unspent: Array<Unspent>, from: string, amount: BigIntType, color: number): Array<Input>;
-    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigIntType, color): Array<Output>;
+    export function calcInputs(unspent: Array<Unspent>, from: string, amount: BigInt, color: number): Array<Input>;
+    export function calcOutputs(unspent: Array<Unspent>, inputs: Array<Input>, from: string, to: string, amount: BigInt, color): Array<Output>;
     export function consolidateUTXOs(utxos: Unspent[]): Array<Tx<Type.TRANSFER>>;
     export function extendWeb3(web3Instance: Web3 | any): ExtendedWeb3;
     export function periodBlockRange(blockNumber: number): [number, number];
@@ -376,14 +375,14 @@ declare module "leap-core" {
   }
 
   class Exit {
-    static signOverExit(utxoId: string, amount: BigIntType | number, privKey: string): Buffer;
-    static sigHashBuff(utxoId: string, amount: BigIntType | number): Buffer;
+    static signOverExit(utxoId: string, amount: BigInt | number, privKey: string): Buffer;
+    static sigHashBuff(utxoId: string, amount: BigInt | number): Buffer;
     static bufferToBytes32Array(buffer: Buffer): Array<string>;
     static txFromProof(proof: Proof): Tx<any>;
     static parseTxDataFromProof(proof: Proof): Buffer;
     static fastSellAmount(
       account: string,
-      amount: BigIntType | number,
+      amount: BigInt | number,
       color: number,
       plasmaChain: ExtendedWeb3,
       rootChain: Web3,
